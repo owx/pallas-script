@@ -1,0 +1,53 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "author": "chenrui",
+  "license": "ISC",
+  "description": "nodejs cli program",
+  "keywords": [],
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/servers/ws.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildzz": "npm i -g"
+  },
+  "bin": {
+    "df": "./src/apps/data-factory/index.js",
+    "nx": "./src/apps/ningxiang/index.js",
+    "mqtt": "./src/apps/mqtt/index.js",
+    "encrypt": "./src/apps/encrypt/index.js",
+    "ast": "./src/apps/sast/index.js",
+    "sca": "./src/apps/keywords-scan/index.js",
+    "fp": "./src/apps/aplid/file-process.js",
+    "oss": "./src/apps/minio/index.js",
+    "ms": "./src/apps/menu-sync/index.js",
+    "omas": "./src/apps/om-audio-sync/index.js",
+    "ocr": "./src/apps/ocr/index.js",
+    "qr": "./src/apps/qrcode/index.js"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "canvas": "^3.1.0",
+    "crypto-js": "^4.2.0",
+    "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "google-auth-library": "^10.1.0",
+    "https-proxy-agent": "^7.0.6",
+    "js-beautify": "^1.15.1",
+    "log4js": "^6.9.1",
+    "minimist": "^1.2.8",
+    "minio": "^8.0.2",
+    "moment": "^2.30.1",
+    "mqtt": "^5.10.4",
+    "multer": "^2.0.1",
+    "p-queue": "^8.1.0",
+    "protobufjs": "^7.5.3",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.34.2",
+    "socket.io": "^4.8.1",
+    "speakeasy": "^2.0.0",
+    "tesseract.js": "^6.0.1"
+  }
+}
