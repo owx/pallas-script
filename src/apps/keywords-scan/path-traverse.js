@@ -1,41 +1,6 @@
 #!/usr/bin/env node
-import fs from 'fs/promises';
+import fs from 'fs/promises'; // 注意这里的导入方式
 import path from 'path';
-
-
-// export function traverseFolder(directory, extension){
-
-//     if( directory == undefined ){
-//         directory='.';
-//     }
-
-//     let fileList = [];
-//     fs.readdirSync(directory).forEach(file => {
-
-//         let fullPath = path.join(directory, file);
-//         let stat = fs.lstatSync(fullPath);
-
-//         if (stat.isDirectory()) {
-
-//         let subFileList = traverseFolder(fullPath, extension); // 递归子目录
-//         fileList = fileList.concat(subFileList);
-
-//         } else if (path.extname(fullPath) === `.${extension}`) {
-
-//         fileList.push(fullPath);
-
-//         } else if(extension == undefined){
-
-//         fileList.push(fullPath);
-
-//         }
-//     });
-
-//     return fileList;
-
-// };
-
-
 
 /**
  * 异步递归遍历目录
@@ -67,7 +32,7 @@ export async function traverseDirectory(dirPath) {
 export const FILE_TYPES = {
   IMAGES: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'],
   DOCUMENTS: ['.pdf', '.doc', '.docx', '.txt', '.rtf', '.md', '.xlsx', '.pptx'],
-  CODE: ['.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.cpp', '.c', '.html', '.css', '.scss', '.json', '.xml', '.vue'],
+  CODE: ['.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.cpp', '.c', '.html', '.css', '.scss', '.json', '.xml', '.vue', '.json'],
   ARCHIVES: ['.zip', '.rar', '.7z', '.tar', '.gz'],
   MEDIA: ['.mp4', '.avi', '.mov', '.mp3', '.wav', '.flac']
 };

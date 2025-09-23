@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-const minimist = require('minimist');
-const sast = require('./sast')
-const utils = require('./utils')
+import minimist from 'minimist';
+import { jsFileReadLine, processJsFileInPath } from './sast.js';
+import { startScan, scanFileRisks } from './sast-core.js';
+import { traverseDirectory } from './utils.js';
 
 
 const args = minimist(process.argv.slice(2));
@@ -23,7 +24,7 @@ if (args.help) {
 
     let filePath=args.f;
     // console.log(filePath)
-    sast.jsFileReadLine(filePath, (line, content)=>{
+    jsFileReadLine(filePath, (line, content)=>{
         
         // console.log(content);
         let phoneRegex = /(?<![0-9]+)(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}(?![0-9+])/g
@@ -42,14 +43,17 @@ if (args.help) {
 } else if (args.p) {
 
     let dir=args.p;
-    let fileList = utils.traverseFolder(dir);
+    let fileList = traverseDirectory(dir);
     for (var i = 0; i < fileList.length; i++) {
         console.log(fileList[i])
     }
 
 } else {
 
-    sast.processJsFileInPath(".")
+    startScan();
+    // scanFileRisks('E:\\aplid\\ningxiang-datav\\src\\views\\aplid\\MapMain\\map.vue')
+    // processJsFileInPath(".")
+    // console.log("xxxxx")
 
 }
 

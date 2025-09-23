@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const beautify = require('js-beautify');
-const Excel = require('exceljs');
-const utils = require('./utils')
+import fs from 'fs';
+import beautify from 'js-beautify';
+import Excel from 'exceljs';
+import { traverseDirectory } from './utils.js';
 
-
-exports.jsFileReadLine = function(filePath, handleLineCallback){
+export function jsFileReadLine(filePath, handleLineCallback){
 
     try{
         const data = fs.readFileSync(filePath, 'utf8');
@@ -34,7 +33,7 @@ exports.jsFileReadLine = function(filePath, handleLineCallback){
 }
 
 
-exports.processJsFileInPath = function(directory){
+export function processJsFileInPath(directory){
 
     // 创建一个新的工作簿
     let workbook = new Excel.Workbook();
@@ -67,7 +66,7 @@ exports.processJsFileInPath = function(directory){
     let idCardKeySheet = workbook.addWorksheet('IdCard');
     idCardKeySheet.columns = columns;
 
-    let fileList = utils.traverseFolder(directory, "js");
+    let fileList = traverseFolder(directory, "js");
     let phoneRegex = /(?<![0-9]+)(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}(?![0-9+])/g;
     // let idCardRegex = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
     let idCardRegex = /(?<![0-9]+)[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2]\d)|3[0-1])\d{3}[0-9Xx](?![0-9+])/g

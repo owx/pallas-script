@@ -15,6 +15,7 @@
   "bin": {
     "df": "./src/apps/data-factory/index.js",
     "nx": "./src/apps/ningxiang/index.js",
+    "prt": "./src/apps/pressure/index.js",
     "mqtt": "./src/apps/mqtt/index.js",
     "encrypt": "./src/apps/encrypt/index.js",
     "ast": "./src/apps/sast/index.js",

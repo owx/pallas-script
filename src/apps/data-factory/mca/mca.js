@@ -1,19 +1,9 @@
 #!/usr/bin/env node
 import fs from 'fs';
-import axios from 'axios';
+import axios from './axios.js';
 import { writeFileWithBOM } from '../../common/file.js';
 import  { logger } from '../../common/logger.js';
 import PQueue from 'p-queue';
-
-/**
- * https://ylfw.mca.gov.cn/
- */
-let Authorization = 'Bearer 853ec580-c420-4e61-9c40-03cf640ab112';
-axios.interceptors.request.use(config => {
-  config.headers['Authorization'] = Authorization;
-  return config;
-});
-
 
 /**
  * 
