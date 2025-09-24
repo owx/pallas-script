@@ -1,71 +1,83 @@
 #!/usr/bin/env node
-import fs from 'fs';
-import axios from './axios.js';
-import { writeFileWithBOM } from '../../common/file.js';
-import  { logger } from '../../common/logger.js';
 import PQueue from 'p-queue';
-import { jujiaSaveParam } from './data/jjParams.js'; 
+import  { logger } from '../../../common/logger.js';
+import {
+  queryPrjInfo,
+  jujiaOrgList,
+  jujiaApplyDetail,
+  jujiaAuditList,
+  jujiaAuditApprove,
+  jujiaGovAuditList,
+  jujiaGovAuditApprove,
+} from "./mca_core.js";
 
 /**
- * 
- * 查询居家养老上门服务-审核-列表
- * edFlag 似乎是用来判断是否已编辑完， 0 已完成， 1未完成
- * 
+ * 街道账号，自动审批
  */
-function queryJujiaAuditList(size=1){
-  let url = 'https://ylfw.mca.gov.cn/ylapi/ylpt/v24Visitingservice/homeVisitServiceInitAuditList';
+export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
 
-  let params = {
-    current: 1,
-    size: size,
-    year: 2025,
-  }
+  // 1. 获取当前项目信息（认定标准）
+  let prjInfoResp = await queryPrjInfo()
+  let prjInfo = prjInfoResp.data.data;
+  let ahbx1401 = prjInfo.ahbx1401;  // code
+  let ahbx1402 = prjInfo.ahbx1402;  // 城市低收入老年人认定标准
+  let ahbx1411 = prjInfo.ahbx1411;  // 农村低收入老年人认定标准
+  // logger.info("查询项目信息:", prjInfo)
 
-  return axios.post(url, null, {params: params});
-}
-
-/**
- * 
- * 查询居家养老上门服务-审核-查看详情
- * 
- */
-function queryJujiaAuditDetail(ahbx1501, jjsm0201){
-  let url = 'https://ylfw.mca.gov.cn/ylapi/ylpt/v24Visitingservice/details';
-
-  let params = {
-    ahbx1501: ahbx1501,
-    jjsm0201: jjsm0201,
-  }
-
-  return axios.get(url, {params: params});
-}
-/**
- * 
- * 查询居家养老上门服务-审核（通过）
- * 
- */
-function approveJujiaAudit(jujiaApproveParam){
-  let url = 'https://ylfw.mca.gov.cn/ylapi/ylpt/v24Visitingservice/homeVisitServiceInitAudit';
-
-  return axios.put(url, jujiaApproveParam);
-}
-
-/**
- * 主入口，自动化处理
- */
-export async function autoAudit(name, jobTitle="工作人员"){
-  // 1. 查询申请列表
-  let auditListResp = await queryJujiaAuditList(50);
+  // 2. 获取审核列表
+  let auditListResp = await jujiaAuditList(size);
   let auditList = auditListResp.data.data.records;
-  // console.log(applyList);
-    
-  // 2. 查询项目详情
-  let projectInfoResp = await queryApplyProjectDetail()
-  let projectInfo = projectInfoResp.data.data;
-  console.log(projectInfo)
+  // logger.info("获取审核列表", applyList);
+  
+
+  // 2. 自动审核
+  const queue = new PQueue({ concurrency: 1 });
+  for(let i=0; i<auditList.length; i++){
+
+    let apply = auditList[i];
+    let jjsm0201 = apply.jjsm0201;
+    let ahbx1501 = apply.ahbx1501;
+
+    queue.add(async () => {
+      let auditDetailResp = await jujiaApplyDetail(ahbx1501, jjsm0201);
+      let auditDetail = auditDetailResp.data.data;
+      
+      let jujiaApproveParam = {
+        "jjsm0201": auditDetail.jjsm0201,
+        "ahbx1501": auditDetail.hbx15Dto.ahbx1501,
+        "jjsm04DtoList": auditDetail.jjsm04VoList,
+        "jjsmCsInfoDto": {
+          "ahbx1402": ahbx1402,
+          "ahbx1411": ahbx1411,
+          "jjsm0205": "1",
+          "jjsm0203": name,
+          "jjsm0204": jobTitle,
+          "jjsm0206": ""
+        }
+      }
+
+      await jujiaAuditApprove(jujiaApproveParam).then((resp)=>{
+        console.log(resp.data)
+      })
+
+    });
+
+  }
+
+}
 
 
-  // 3. 自动审核
+/**
+ * 区账号，自动审批
+ */
+export async function quxianAutoAudit(name, jobTitle="主任"){
+  // 1. 查询申请列表
+  let auditListResp = await jujiaGovAuditList(50);
+  let auditList = auditListResp.data.data.records;
+
+  // console.log(auditList);
+
+  // 2. 自动审核
   const queue = new PQueue({ concurrency: 1 });
   for(let i=0; i<auditList.length; i++){
 
@@ -76,37 +88,33 @@ export async function autoAudit(name, jobTitle="工作人员"){
     queue.add(async () => {
       let auditDetailResp = await queryJujiaAuditDetail(ahbx1501, jjsm0201);
       let auditDetail = auditDetailResp.data.data;
-      
-      let jujiaApproveParam = {
+      // console.log(auditDetail);
+
+      let approveParam = {
         "jjsm0201": auditDetail.jjsm0201,
         "ahbx1501": auditDetail.hbx15Dto.ahbx1501,
         "jjsm04DtoList": auditDetail.jjsm04VoList,
-        "jjsmCsInfoDto": {
+        "jjsmShInfoDto": {
+          "axbe0001": "00000000000000000000000000000000",
           "ahbx1402": 980,
           "ahbx1411": 765,
-          "jjsm0205": "1",
-          "jjsm0203": name,
-          "jjsm0204": jobTitle,
-          "jjsm0206": ""
-        }
+          "jjsm0209": "1",
+          "jjsm0207": "余强强",
+          "jjsm0208": "主任",
+          "jjsm0210": ""
+        },
+        "year":"2025"
       }
 
-    // await approveJujiaAudit(jujiaApproveParam).then((resp)=>{
-    //   console.log(resp.data)
-    // })
+      // console.log(approveParam)
+      await jujiaGovAuditApprove(approveParam).then((resp)=>{
+        console.log(resp.data)
+      })
 
-      // await submitJujiaApply(param).then(resp => {
-      //     console.log(resp.data)
-      //       // logger.info('分配任务 (类型：'  + taskType  + ')' +  srvObjName + '( ' + task.ahbx1501 + ')  ==> ' + employeeName + '(' + employeeId + ')' + JSON.stringify(resp.data));
-      // }).catch(error => {
-      //       console.error('Error:', error);
-      // })
+
     });
 
   }
 
 }
-
-
-
 
