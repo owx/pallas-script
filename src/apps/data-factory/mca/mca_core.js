@@ -185,8 +185,10 @@ export async function jujiaGovAuditApprove(jujiaApproveParam){
  * 
  * ahbx1701   1 评估设计机构， 2 服务机构， 3 验收机构
  * 
+ * 例如 areaCode='360428100000' ， 地区code不一样，数据可能不同，千万别错！
+ * 
  */
-export async function homeBedOrgList(ahbx1701=2, areaCode='360428100000'){
+export async function homeBedOrgList(ahbx1701, areaCode){
   let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
 
   let params = {
@@ -302,6 +304,25 @@ export async function homebedGovAuditList(size=1){
 
   return request.post(url, null, {params: params});
 }
+
+
+/**
+ * 
+ * 家庭养老床位建设-完成-列表-【区县账号】
+ * 
+ */
+export async function homebedGovCompleteList(size=1){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyCompleteAuditList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: 2025,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
 
 /**
  * 

@@ -8,7 +8,8 @@ import {
   homeBedAuditList,
   homeBedAuditApprove,
   homebedGovAuditList,
-  homebedGovAuditApprove
+  homebedGovAuditApprove,
+  homebedGovCompleteList
 } from "./mca_core.js";
 
 
@@ -72,7 +73,7 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
  * 区账号，自动审批
  * 
  */
-export async function quxianAutoAudit(name="", size=1, jobTitle="主任"){
+export async function quxianAutoAudit(areaCode, name="", size=1, jobTitle="主任"){
 
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()
@@ -84,27 +85,27 @@ export async function quxianAutoAudit(name="", size=1, jobTitle="主任"){
 
 
   // 2. 获取评估设计机构信息
-  let pgOrgListResp = await homeBedOrgList(1, "360428211000");
+  let pgOrgListResp = await homeBedOrgList(1, areaCode);
   let pgOrgList = pgOrgListResp.data.data;
-  logger.info("获取评估设计机构信息: " + pgOrgList.length)
   if((!pgOrgList) || pgOrgList.length>1 || pgOrgList.length==0){
     logger.error("获取到的评估设计机构超过一个，需要先确定一下使用哪个！")
     return;
   }
   let pgAxbe0001 = pgOrgList[0].axbe0001; //机构代号
   let pgAxbe0003 = pgOrgList[0].axbe0003; //机构名称
+  logger.info("获取评估设计机构信息: " + pgAxbe0003)
 
 
   // 3. 获取验收机构信息
-  let ysrOgListResp = await homeBedOrgList(3, "360428211000");
+  let ysrOgListResp = await homeBedOrgList(3, areaCode);
   let ysrOgList = ysrOgListResp.data.data;
-  logger.info("获取验收机构信息: " + ysrOgList.length)
   if((!ysrOgList) || ysrOgList.length>1 || ysrOgList.length==0){
     logger.error("获取到的验收机构超过一个，需要先确定一下使用哪个！")
     return;
   }
   let ysAxbe0001 = ysrOgList[0].axbe0001; //机构代号
   let ysAxbe0003 = ysrOgList[0].axbe0003; //机构名称
+  logger.info("获取验收机构信息: " + ysAxbe0003)
 
 
   // 4. 获取审核列表
@@ -113,7 +114,13 @@ export async function quxianAutoAudit(name="", size=1, jobTitle="主任"){
   logger.info("获取审核列表-> " , auditList.length);
   
 
-  // 2. 自动审核
+  // 4. 获取完成列表（用来驳回审核，重新填报数据的）
+  // let auditListResp = await homebedGovCompleteList(size);
+  // let auditList = auditListResp.data.data.records;
+  // logger.info("获取审核列表-> " , auditList);
+  
+
+  // 5. 自动审核
   const queue = new PQueue({ concurrency: 1 });
   for(let i=0; i<auditList.length; i++){
     let apply = auditList[i];
@@ -135,14 +142,14 @@ export async function quxianAutoAudit(name="", size=1, jobTitle="主任"){
           ysAxbe0001: ysAxbe0001,
           ahbx1402: ahbx1402,
           ahbx1411: ahbx1411,
-          ahbx1607: 1,
+          ahbx1607: 1,              // 审核状态， 0 不通过， 1 通过
           ahbx1606: name,
           ahbx1609: jobTitle,
           ahbx1608: ""
         }
       }
 
-      // console.log(approveParam);
+      console.log(approveParam);
       await homebedGovAuditApprove(approveParam).then((resp)=>{
         console.log(resp.data)
       })

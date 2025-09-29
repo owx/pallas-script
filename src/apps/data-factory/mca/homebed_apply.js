@@ -7,7 +7,7 @@ import  { logger } from '../../../common/logger.js';
 /**
  * 主入口，自动化处理
  */
-export async function autoSubmitApply(size=0){
+export async function autoSubmitApply(areaCode, size=0){
 
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()
@@ -19,15 +19,16 @@ export async function autoSubmitApply(size=0){
 
 
   // 2. 获取服务组织信息
-  let orgListResp = await homeBedOrgList()
+  let orgListResp = await homeBedOrgList(2, areaCode)
   let orgList = orgListResp.data.data;
-  logger.info("获取服务组织信息: " + orgList.length)
   if((!orgList) || orgList.length>1 || orgList.length==0){
-    logger.error("获取到的服务组织超过一个，需要先确定一下使用哪个！")
+    logger.error("获取到的服务组织超过一个，需要先确定一下使用哪个！", orgList)
     return;
   }
   let axbe0001 = orgList[0].axbe0001; //机构代号
   let axbe0003 = orgList[0].axbe0003; //机构名称
+  logger.info("组织信息：" + axbe0003)
+
 
   // 4. 获取申请列表
   let applyListResp = await homeBedApplyList(size);

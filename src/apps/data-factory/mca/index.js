@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-import { autoSubmitApply } from './jujia_apply.js';
-import { jiedaoAutoAudit, quxianAutoAudit } from './jujia_audit.js';
-
-// import { autoSubmitApply } from './mca/homebed_apply.js';
-// import { jiedaoAutoAudit, quxianAutoAudit } from './mca/homebed_audit.js';
 
 /*
 乡  镇	帐  号	密 码	姓名
@@ -36,10 +31,24 @@ import { jiedaoAutoAudit, quxianAutoAudit } from './jujia_audit.js';
 都昌县民政局帐号：ylfw_360428_0001
             密码：528Yu@18
 
+
+2025/09/29
+ylfw_654024_0005    Gl@562310
+ylfw_654024_0010    Gl@562310
+ylfw_654024_0001    Gl@5623109
+
 */
 
+// import { autoSubmitApply } from './jujia_apply.js';
+// import { jiedaoAutoAudit, quxianAutoAudit } from './jujia_audit.js';
 
-// autoSubmitApply(100);
-jiedaoAutoAudit ("孜丽哈·苏里旦", 100);
+import { autoSubmitApply } from './homebed_apply.js';
+import { jiedaoAutoAudit, quxianAutoAudit } from './homebed_audit.js';
 
-// quxianAutoAudit("余强强", 1, "主任")
+export async function main() {
+    // autoSubmitApply("654024104000", 1);
+    // jiedaoAutoAudit ("热西旦木·亚古甫江", 100);
+    // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
+
+}
+
