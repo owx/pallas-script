@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import {queryAreaInfo, queryJujiaApplyList, queryOrgList,  queryPrjInfo, queryServiceDetail, saveJujiaApply, submitJujiaApply } from "./mca_core.js";
+import { queryPrjInfo, jujiaOrgList,  jujiaApplyList, queryAreaInfo, jujiaApplySubmit } from "./mca_core.js";
 import  { logger } from '../../../common/logger.js';
 import { jujiaServiceList } from './data/constants.js'
 
@@ -44,7 +44,7 @@ export async function autoSubmitApply(size=0){
 
 
   // 4. 获取申请列表
-  let applyListResp = await queryJujiaApplyList(size);
+  let applyListResp = await jujiaApplyList(size);
   let applyList = applyListResp.data.data.records;
   // console.log(applyList);
   logger.info("获取申请列表: ", applyList.length + ' 个')
@@ -80,7 +80,7 @@ export async function autoSubmitApply(size=0){
 
     // console.log(param)
     queue.add(async () => 
-      await submitJujiaApply(param).then(resp => {
+      await jujiaApplySubmit(param).then(resp => {
         logger.info(resp.data)
       }).catch(error => {
             console.error('Error:', error);

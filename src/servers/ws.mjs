@@ -1,28 +1,6 @@
 import axios from 'axios';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-<<<<<<< HEAD
-import express from 'express';
-import mysql from 'mysql2';
-import moment from 'moment';
-
-// 创建连接
-const connection = mysql.createConnection({
-  host: 'pallas.cn',
-  user: 'pallas',
-  password: '1',
-  database: 'pallas'
-});
-
-// Promise 方式
-// connection.promise()
-//   .query('SELECT * FROM app_stock_info')
-//   .then(([rows, fields]) => {
-//     console.log(rows);
-//   })
-//   .catch(console.error)
-//   .then(() => connection.end());
-=======
 import express, { response } from 'express';
 import  mysql  from 'mysql2/promise';
 import moment from 'moment';
@@ -41,7 +19,6 @@ const pool = mysql.createPool({
 //   console.log(data);
 // });
 
->>>>>>> ef4a2885802295fbe077d0f3e562ae79af314cb0
 
 const app = express();
 const httpServer = createServer(app);

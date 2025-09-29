@@ -1,19 +1,9 @@
 #!/usr/bin/env node
 import axios from 'axios';
-
-/**
- * 全国养老服务信息系统
- * https://ylfw.mca.gov.cn/
- */
-
-// 全国养老服务信息系统
-// 全国养老服务信息平台（管理端）
-// 2025年提升行动项目
-// 居家养老上门服务
-// 街道申请，街道审批，县审批
-// 
-
-const authorization = 'Bearer c2242fad-9a8a-4575-bbf2-db45daf5b68d';
+ 
+// Bearer e673f832-397f-4d20-bf96-143eecc3e105
+// Bearer 706e1f21-8347-4259-ab32-73f6718c1e68
+const authorization = 'Bearer e673f832-397f-4d20-bf96-143eecc3e105';
 
 /**
  * 全局拦截器
@@ -27,9 +17,10 @@ const authorization = 'Bearer c2242fad-9a8a-4575-bbf2-db45daf5b68d';
  * 实例拦截器
  */
 // const request = axios.create();
-const request = axios.create({baseURL: 'https://ylfw.mca.gov.cn'});
+const request = axios.create({baseURL: 'https://chifeng-nx.njapld.com:7979'});
 request.interceptors.request.use(config => {
   config.headers['Authorization'] = authorization;
+  config.headers['Content-type'] = 'application/json';
   return config;
 });
 
