@@ -34,7 +34,7 @@ export async function queryPrjInfo(year=2025){
 }
 
 
-/*****************************************  居家养老上门服务  ****************************************** */
+/*******以下**********************************  居家养老上门服务  ****************************************** */
 
 
 /**
@@ -109,6 +109,13 @@ export async function jujiaApplySave(jujiaApplyParam){
 export async function jujiaApplySubmit(jujiaApplyParam){
   let url = '/ylapi/ylpt/v25Visitingservice/v25homeVisitServiceApply';
 
+  // let jujiaApplyParam = {
+  //   jjsm0201: jjsm0201,
+  //   ahbx1501: ahbx1501,
+  //   hbx15Dto: hbx15Dto,
+  //   jjsm04DtoList: jjsm04DtoList,
+  // }
+
   return request.post(url, jujiaApplyParam);
 }
 
@@ -140,6 +147,20 @@ export async function jujiaAuditList(size=1){
 export async function jujiaAuditApprove(jujiaApproveParam){
   let url = '/ylapi/ylpt/v24Visitingservice/homeVisitServiceInitAudit';
 
+  // let jujiaApproveParam = {
+  //   jjsm0201: auditDetail.jjsm0201,
+  //   ahbx1501: auditDetail.hbx15Dto.ahbx1501,
+  //   jjsm04DtoList: auditDetail.jjsm04VoList,
+  //   jjsmCsInfoDto: {
+  //     ahbx1402: ahbx1402,
+  //     ahbx1411: ahbx1411,
+  //     jjsm0205: "1",
+  //     jjsm0203: name,
+  //     jjsm0204: jobTitle,
+  //     jjsm0206: ""
+  //   }
+  // }
+
   return request.put(url, jujiaApproveParam);
 }
 
@@ -169,14 +190,32 @@ export async function jujiaGovAuditList(size=1){
  */
 export async function jujiaGovAuditApprove(jujiaApproveParam){
   let url = '/ylapi/ylpt/v24Visitingservice/homeVisitServiceAudit';
+
+  // let approveParam = {
+  //   jjsm0201: auditDetail.jjsm0201,
+  //   ahbx1501: auditDetail.hbx15Dto.ahbx1501,
+  //   jjsm04DtoList: auditDetail.jjsm04VoList,
+  //   jjsmShInfoDto: {
+  //     axbe0001: "00000000000000000000000000000000",
+  //     ahbx1402: 980,
+  //     ahbx1411: 765,
+  //     jjsm0209: "1",
+  //     jjsm0207: "余强强",
+  //     jjsm0208: "主任",
+  //     jjsm0210: ""
+  //   },
+  //   year:"2025"
+  // }
              
   return request.put(url, jujiaApproveParam);
 }
 
 
+/*******以上**********************************  居家养老上门服务  ****************************************** */
 
 
-/*****************************************  家庭养老床位建设  ****************************************** */
+
+/********以下*********************************  家庭养老床位建设  ****************************************** */
 
 
 /**
@@ -254,6 +293,12 @@ export async function homeBedApplySave(homeBedApplyParam){
 export async function homeBedApplySubmit(homeBedApplyParam){
   let url = '/ylapi/ylpt/v25ConstructionBed/v25bedBuildApply';
 
+  // let homeBedApplyParam = {
+  //   ahbx1601: ahbx1601,
+  //   hbx15Dto: hbx15Dto,
+  //   ssAxbe0001: axbe0001,
+  // }
+
   return request.post(url, homeBedApplyParam);
 }
 
@@ -284,6 +329,18 @@ export async function homeBedAuditList(size=1){
 export async function homeBedAuditApprove(homebedApproveParam){
   let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildInitAudit';
 
+  // let approveParam = {
+  //   ahbx1601: auditDetail.ahbx1601,
+  //   cauditInfo: {
+  //     ahbx1402: ahbx1402,
+  //     ahbx1411: ahbx1411,
+  //     ahbx1603: 1,
+  //     ahbx1602: name,
+  //     ahbx1605: jobTitle,
+  //     ahbx1604: ""
+  //   }
+  // }
+
   return request.post(url, homebedApproveParam);
 }
 
@@ -308,16 +365,66 @@ export async function homebedGovAuditList(size=1){
 
 /**
  * 
+ * 家庭养老床位建设-审核-【区县账号】
+ * 
+ */
+export async function homebedGovAuditApprove(homebedApproveParam){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyAudit';
+
+  // let homebedApproveParam = {
+  //   ahbx1601: auditDetail.ahbx1601,
+  //   year:  "2025",
+  //   pgAxbe0001: pgAxbe0001,
+  //   ysAxbe0001: ysAxbe0001,
+  //   zauditInfo: {
+  //     pgAxbe0001: pgAxbe0001,
+  //     ysAxbe0001: ysAxbe0001,
+  //     ahbx1402: ahbx1402,
+  //     ahbx1411: ahbx1411,
+  //     ahbx1607: 1,              // 审核状态， 0 不通过， 1 通过
+  //     ahbx1606: name,
+  //     ahbx1609: jobTitle,
+  //     ahbx1608: ""
+  //   }
+  // }
+             
+  return request.post(url, homebedApproveParam);
+}
+
+
+/**
+ * 
  * 家庭养老床位建设-完成-列表-【区县账号】
  * 
  */
-export async function homebedGovCompleteList(size=1){
+export async function homebedGovCompleteList(size=1, year=2025){
   let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyCompleteAuditList';
 
   let params = {
     current: 1,
     size: size,
-    year: 2025,
+    year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+
+/**
+ * 
+ * 家庭养老床位建设-服务人员分派-获取待分派列表
+ * flag：1 未分配，2 已分配
+ * 
+ */
+export async function homebedAllocList(size=1, flag=1, year=2025){
+  let url = '/ylapi/ylpt/v24Allocate/institutionAllocateList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: year,
+    flag: flag,
   }
 
   return request.post(url, null, {params: params});
@@ -326,13 +433,35 @@ export async function homebedGovCompleteList(size=1){
 
 /**
  * 
- * 家庭养老床位建设-审核-【区县账号】
+ * 家庭养老床位建设-服务人员分派-查询员工列表
  * 
  */
-export async function homebedGovAuditApprove(jujiaApproveParam){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyAudit';
-             
-  return request.post(url, jujiaApproveParam);
+export async function homebedEmployeeList(){
+  let url = '/ylapi/ylptjg/employee/queryEmployeeListByAxbe0001';
+
+  return request.post(url);
 }
 
 
+/**
+ * 
+ * 家庭养老床位建设-服务人员分派-分配服务人员
+ * 
+ */
+export async function homebedAllocSubmit(homebedAllocParam){
+
+  let url = '/ylapi/ylpt/v24Allocate/institutionAllocate';
+
+  // let homebedAllocParam = {
+  //   ahbx1601: ahbx1601,
+  //   ahbx1701: ahbx1701,
+  //   ahdx6124: ahdx6124,
+  //   axbe0001: axbe0001,
+  //   year: year
+  // }
+
+  return request.post(url, homebedAllocParam);
+}
+
+
+/******以上********************************  家庭养老床位建设  ****************************************** */

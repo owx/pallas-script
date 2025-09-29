@@ -43,16 +43,16 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
       let auditDetail = auditDetailResp.data.data;
       
       let jujiaApproveParam = {
-        "jjsm0201": auditDetail.jjsm0201,
-        "ahbx1501": auditDetail.hbx15Dto.ahbx1501,
-        "jjsm04DtoList": auditDetail.jjsm04VoList,
-        "jjsmCsInfoDto": {
-          "ahbx1402": ahbx1402,
-          "ahbx1411": ahbx1411,
-          "jjsm0205": "1",
-          "jjsm0203": name,
-          "jjsm0204": jobTitle,
-          "jjsm0206": ""
+        jjsm0201: auditDetail.jjsm0201,
+        ahbx1501: auditDetail.hbx15Dto.ahbx1501,
+        jjsm04DtoList: auditDetail.jjsm04VoList,
+        jjsmCsInfoDto: {
+          ahbx1402: ahbx1402,
+          ahbx1411: ahbx1411,
+          jjsm0205: "1",
+          jjsm0203: name,
+          jjsm0204: jobTitle,
+          jjsm0206: ""
         }
       }
 
@@ -91,19 +91,19 @@ export async function quxianAutoAudit(name, jobTitle="主任"){
       // console.log(auditDetail);
 
       let approveParam = {
-        "jjsm0201": auditDetail.jjsm0201,
-        "ahbx1501": auditDetail.hbx15Dto.ahbx1501,
-        "jjsm04DtoList": auditDetail.jjsm04VoList,
-        "jjsmShInfoDto": {
-          "axbe0001": "00000000000000000000000000000000",
-          "ahbx1402": 980,
-          "ahbx1411": 765,
-          "jjsm0209": "1",
-          "jjsm0207": "余强强",
-          "jjsm0208": "主任",
-          "jjsm0210": ""
+        jjsm0201: auditDetail.jjsm0201,
+        ahbx1501: auditDetail.hbx15Dto.ahbx1501,
+        jjsm04DtoList: auditDetail.jjsm04VoList,
+        jjsmShInfoDto: {
+          axbe0001: "00000000000000000000000000000000",
+          ahbx1402: 980,
+          ahbx1411: 765,
+          jjsm0209: "1",
+          jjsm0207: name,
+          jjsm0208: jobTitle,
+          jjsm0210: ""
         },
-        "year":"2025"
+        year:"2025"
       }
 
       // console.log(approveParam)

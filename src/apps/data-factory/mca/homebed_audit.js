@@ -45,14 +45,14 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
       let auditDetail = auditDetailResp.data.data;
 
       let approveParam = {
-        "ahbx1601": auditDetail.ahbx1601,
-        "cauditInfo": {
-          "ahbx1402": ahbx1402,
-          "ahbx1411": ahbx1411,
-          "ahbx1603": 1,
-          "ahbx1602": name,
-          "ahbx1605": jobTitle,
-          "ahbx1604": ""
+        ahbx1601: auditDetail.ahbx1601,
+        cauditInfo: {
+          ahbx1402: ahbx1402,
+          ahbx1411: ahbx1411,
+          ahbx1603: 1,
+          ahbx1602: name,
+          ahbx1605: jobTitle,
+          ahbx1604: ""
         }
       }
 

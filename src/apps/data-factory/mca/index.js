@@ -37,6 +37,9 @@ ylfw_654024_0005    Gl@562310
 ylfw_654024_0010    Gl@562310
 ylfw_654024_0001    Gl@5623109
 
+// 家床-人员分配
+shfw654024000001   Mzj2026@
+
 */
 
 // import { autoSubmitApply } from './jujia_apply.js';
@@ -44,11 +47,14 @@ ylfw_654024_0001    Gl@5623109
 
 import { autoSubmitApply } from './homebed_apply.js';
 import { jiedaoAutoAudit, quxianAutoAudit } from './homebed_audit.js';
+import { autoSubmitAlloc } from './homebed_alloc.js';
+
 
 export async function main() {
     // autoSubmitApply("654024104000", 1);
     // jiedaoAutoAudit ("热西旦木·亚古甫江", 100);
     // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
 
+    autoSubmitAlloc("尔沙来提·买买提江", 100);
 }
 
