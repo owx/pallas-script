@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node ./src/servers/ws.mjs",
     "server": "node ./src/servers/server.mjs",
+    "stark": "node ./src/servers/stark/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "buildzz": "npm i -g"
   },
@@ -33,11 +34,13 @@
     "adm-zip": "^0.5.16",
     "axios": "^1.11.0",
     "canvas": "^3.1.0",
+    "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "google-auth-library": "^10.1.0",
+    "helmet": "^8.1.0",
     "https-proxy-agent": "^7.0.6",
     "js-beautify": "^1.15.1",
     "log4js": "^6.9.1",
