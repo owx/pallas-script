@@ -171,7 +171,7 @@ class StockDataService extends EventEmitter {
   
     priceFields.forEach(field => {
       if (processedData[field] != null) {
-        processedData[field] = processedData[field] / 100.0;
+        // processedData[field] = processedData[field] / 100.0;
       }
     });
   

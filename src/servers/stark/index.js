@@ -210,6 +210,7 @@ async function startServer() {
     
     // 添加示例股票
     stockService
+      .addStock('BABA', '106') // 平安银行
       .addStock('000001', '0') // 平安银行
       .addStock('600036', '1') // 招商银行
       .addStock('000858', '0') // 五粮液

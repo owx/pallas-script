@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '../../../common/logger.js';
+import  { logger } from '../../../../common/logger.js';
 import {
+  queryUserInfo,
   queryPrjInfo,
   jujiaOrgList,
   jujiaApplyDetail,
@@ -9,14 +10,29 @@ import {
   jujiaAuditApprove,
   jujiaGovAuditList,
   jujiaGovAuditApprove,
-} from "./mca_core.js";
+} from "../mca_core.js";
 
 /**
  * 街道账号，自动审批
  */
 export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
 
-  // 1. 获取当前项目信息（认定标准）
+  // 1. 获取用户登录信息（主要是获取用户登录姓名）
+  let uesrInfoResp = await queryUserInfo()
+  let uesrInfo = uesrInfoResp.data.data;
+  let userName = uesrInfo.sysUser.name;
+  // logger.info("获取用户登录信息:", uesrInfo)
+  logger.info("获取用户姓名:", userName)
+  if( !userName ){
+    logger.info("获取用户姓名失败！")
+    return;
+  }
+  if( userName!=name){
+    logger.info("审批人和当前账号不是同一人！")
+    return;
+  }
+
+  // 2. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()
   let prjInfo = prjInfoResp.data.data;
   let ahbx1401 = prjInfo.ahbx1401;  // code
@@ -24,13 +40,13 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
   let ahbx1411 = prjInfo.ahbx1411;  // 农村低收入老年人认定标准
   // logger.info("查询项目信息:", prjInfo)
 
-  // 2. 获取审核列表
+  // 3. 获取审核列表
   let auditListResp = await jujiaAuditList(size);
   let auditList = auditListResp.data.data.records;
-  // logger.info("获取审核列表", applyList);
+  // logger.info("获取审核列表", auditList);
   
 
-  // 2. 自动审核
+  // 4. 自动审核
   const queue = new PQueue({ concurrency: 1 });
   for(let i=0; i<auditList.length; i++){
 
@@ -56,6 +72,7 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
         }
       }
 
+      // console.log(jujiaApproveParam)
       await jujiaAuditApprove(jujiaApproveParam).then((resp)=>{
         console.log(resp.data)
       })
@@ -71,13 +88,29 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
  * 区账号，自动审批
  */
 export async function quxianAutoAudit(name, jobTitle="主任"){
-  // 1. 查询申请列表
+
+  // 1. 获取用户登录信息（主要是获取用户登录姓名）
+  let uesrInfoResp = await queryUserInfo()
+  let uesrInfo = uesrInfoResp.data.data;
+  let userName = uesrInfo.sysUser.name;
+  // logger.info("获取用户登录信息:", uesrInfo)
+  logger.info("获取用户姓名:", userName)
+  if( !userName ){
+    logger.info("获取用户姓名失败！")
+    return;
+  }
+  if( userName!=name){
+    logger.info("审批人和当前账号不是同一人！")
+    return;
+  }
+  
+  // 2. 查询申请列表
   let auditListResp = await jujiaGovAuditList(50);
   let auditList = auditListResp.data.data.records;
 
   // console.log(auditList);
 
-  // 2. 自动审核
+  // 3. 自动审核
   const queue = new PQueue({ concurrency: 1 });
   for(let i=0; i<auditList.length; i++){
 

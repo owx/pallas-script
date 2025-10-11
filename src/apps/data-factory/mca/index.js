@@ -1,6 +1,77 @@
 #!/usr/bin/env node
+import { autoSubmitApply } from './jujia/jujia_apply.js';
+import { jiedaoAutoAudit, quxianAutoAudit } from './jujia/jujia_audit.js';
+import { autoAllocStatistic } from './jujia/jujia_alloc.js';
 
-/*
+// import { autoSubmitApply } from './homebed_apply.js';
+// import { jiedaoAutoAudit, quxianAutoAudit } from './homebed_audit.js';
+// import { autoSubmitAlloc } from './homebed_alloc.js';
+
+
+export async function main() {
+
+    // 街道提交申请
+    // autoSubmitApply(100);
+
+    // 街道审核
+    jiedaoAutoAudit ("刘萍", 100);
+
+    // 区县审核
+    // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
+    
+    // （家床）提交初审？
+    // autoSubmitAlloc("邹元珍", 1);
+
+    // 家床统计数据
+    // autoAllocStatistic("d:\\temp\\新源.csv", 500);
+
+}
+
+
+
+/****************   需求记录
+
+2025/10/11
+1、霍城县账密
+shfw654023000001
+Gl@562310
+2、尼勒克账密
+shfw654028000001
+Mzj2027@
+3、巩留账密
+shfw654024000001
+Mzj2026@
+4、新源账密
+shfw654025000001
+Mzj2028@
+
+ 2025/10/10 居家养老上门申请&审批
+ 地区	全国养老服务	密码	可信	密码
+吉州区	zhoubin1985	JZQmz@36081	hubo1993	Zb@198521
+机构	shfw360802000001	Zb@19852		
+古南街道	xiaoliqin	Zb@19852		
+樟山镇	zouyuanzhen	Zb@198521		
+习溪桥街道	pengdongming	Zb@198521		
+永叔街道	liumaodong	Zb@19852		
+曲濑镇	wuliuping	Zb@19852160973		
+文山街道	xupan	Zb@198522		
+兴桥	liusujuan	Zb@198521		
+北门街道	huangchengyuan	Zb@198521		
+禾埠街道	fuyanyu	Zb@198521		
+长塘镇	xiaowei1	Zb@198521		
+白塘街道	liuping1	Zb@198521		
+
+2025/09/29
+ylfw_654024_0005    Gl@562310
+ylfw_654024_0010    Gl@562310
+ylfw_654024_0001    Gl@5623109
+
+
+// 家床-人员分配
+shfw654024000001   Mzj2026@
+
+
+2025/09
 乡  镇	帐  号	密 码	姓名
 都昌镇	dczczj	Ylfw@2024	曹子敬
 中馆镇	dcxzgz	Ylfw@2024	赵益萍
@@ -32,29 +103,4 @@
             密码：528Yu@18
 
 
-2025/09/29
-ylfw_654024_0005    Gl@562310
-ylfw_654024_0010    Gl@562310
-ylfw_654024_0001    Gl@5623109
-
-// 家床-人员分配
-shfw654024000001   Mzj2026@
-
 */
-
-// import { autoSubmitApply } from './jujia_apply.js';
-// import { jiedaoAutoAudit, quxianAutoAudit } from './jujia_audit.js';
-
-import { autoSubmitApply } from './homebed_apply.js';
-import { jiedaoAutoAudit, quxianAutoAudit } from './homebed_audit.js';
-import { autoSubmitAlloc } from './homebed_alloc.js';
-
-
-export async function main() {
-    // autoSubmitApply("654024104000", 1);
-    // jiedaoAutoAudit ("热西旦木·亚古甫江", 100);
-    // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
-
-    autoSubmitAlloc("尔沙来提·买买提江", 100);
-}
-

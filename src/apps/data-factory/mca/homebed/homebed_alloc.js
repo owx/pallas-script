@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '../../../common/logger.js';
+import  { logger } from '../../../../common/logger.js';
 import {
   homebedAllocList,
   homebedEmployeeList,
   homebedAllocSubmit,
-} from "./mca_core.js";
+} from "../mca_core.js";
 
 
 /**

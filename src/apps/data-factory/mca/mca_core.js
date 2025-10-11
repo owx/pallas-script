@@ -8,6 +8,23 @@ import request from './request.js';
 
 /*****************************************  通用接口  ****************************************** */
 
+
+/**
+ * 
+ * 查询当前账号用户信息
+ * 
+ */
+export async function queryUserInfo(appId='ylpt'){
+  let url = '/ylapi/console/dsrpt/user/info';
+
+  let params = {
+    appId: appId,
+  }
+
+  return request.get(url, {params: params});
+}
+
+
 /**
  * 
  * 查询行政区划信息
@@ -34,15 +51,19 @@ export async function queryPrjInfo(year=2025){
 }
 
 
-/*******以下**********************************  居家养老上门服务  ****************************************** */
 
+/*******以下**********************************  居家养老上门服务  ****************************************** */
 
 /**
  * 
- * 居家养老上门服务-根据行政区划code查询服务机构信息
+ * 居家养老上门服务-根据行政区划code和服务类型查询服务项目的机构信息
+ * （备注：默认居家的服务机构选择会通过传递参数 01 来查询可用的服务机构）
  * 
+ * @param {*} areaCode 
+ * @param {*} ahae0621 服务类型： 01 生活照料服务, 02 基础照顾服务, 03探访关爱服务, 04 健康管理服务, 05 委托代办服务, 06 精神慰藉服务
+ * @returns 
  */
-export async function jujiaOrgList(ahae0621='01', areaCode='654023103000'){
+export async function jujiaOrgList(areaCode, ahae0621='01'){
   let url = '/ylapi/ylpt/v24Visitingservice/queryHae1InfoList';
 
   let params = {
@@ -210,6 +231,26 @@ export async function jujiaGovAuditApprove(jujiaApproveParam){
   return request.put(url, jujiaApproveParam);
 }
 
+/**
+ * 居家养老上门服务-服务人员执行分派-查询列表
+ * @param {*} size  分页查询数量
+ * @param {*} flag  1 未分派， 2 已分派
+ * @param {*} year  年份
+ * @returns 
+ */
+export async function jujiaAllocList(flag, size=1, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingallocate/institutionAllocateList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: year,
+    flag: flag,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
 
 /*******以上**********************************  居家养老上门服务  ****************************************** */
 
@@ -227,7 +268,7 @@ export async function jujiaGovAuditApprove(jujiaApproveParam){
  * 例如 areaCode='360428100000' ， 地区code不一样，数据可能不同，千万别错！
  * 
  */
-export async function homeBedOrgList(ahbx1701, areaCode){
+export async function homeBedOrgList(areaCode, ahbx1701){
   let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
 
   let params = {
