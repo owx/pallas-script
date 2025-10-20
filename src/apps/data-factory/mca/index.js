@@ -11,10 +11,10 @@ import { autoAllocStatistic } from './jujia/jujia_alloc.js';
 export async function main() {
 
     // 街道提交申请
-    // autoSubmitApply(100);
+    // autoSubmitApply(1);
 
     // 街道审核
-    jiedaoAutoAudit ("刘萍", 100);
+    jiedaoAutoAudit ("刘勤", 200);
 
     // 区县审核
     // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
@@ -30,6 +30,10 @@ export async function main() {
 
 
 /****************   需求记录
+
+2025/10/20 yinli  吉里于孜镇
+账号：jz2024  密码： LIUqin8@jz
+
 
 2025/10/11
 1、霍城县账密

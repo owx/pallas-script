@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import axios from 'axios';
 import fs from 'fs';
+import { encryptUtil } from '../../common/EncryptUtil.ts'
 import  { logger } from '../../common/logger.js';
 import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
-import CryptoJS from "crypto-js";
 
 
-let Authorization = 'Bearer 22a07b53-4f79-40a7-ae2f-5fbebf6b7b02';
+let Authorization = 'Bearer 895a9dcb-c7c1-43f6-a033-edc1bf3bbe67';
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = Authorization;
   return config;
@@ -30,17 +30,84 @@ function queryDeathInfo(name, idCard){
   
     return axios.post('http://180.101.239.5:11762/bussiness/dpDeathQueryRecords/query', data);
 }
+
+
+
+async function queryDeath(queue, name, idCard, count=0){
+  count++;
+  let rowData = '';
+  await queryDeathInfo(name, idCard).then((resp)=>{
+
+    let jsonData = resp.data;
+    // logger.info(name + ',' +  idCard + ', 成功, ' + JSON.stringify(jsonData) );
+    let decryptData = encryptUtil.decrypt(jsonData, Authorization)
+    // logger.info(name + ',' +  idCard + ', 成功, ' + decryptData );
+
+    let response = JSON.parse(decryptData);
+    let data = response.data;
+    if(response.code === 0){
+      rowData = idCard + ', 成功, ' + data.id + ',' + data.zxbs + ',' + name + ',' +   data.deathdate;
+    }else{
+      rowData = idCard + ', 失败, ' + data.id + ',' + data.zxbs + ',' +  name + ',' +   data.deathdate;
+    }
+    logger.info( rowData + ',' + decryptData);
+  }).catch((err)=>{
+
+    if(count>10){
+      rowData = name + ',' +  idCard + ', 失败-异常';
+      logger.error(name + ',' +  idCard + ', 异常10次, ' + err);
+    }else{
+      logger.error(name + ',' +  idCard + ', 异常重试' + count + '次, ' + err);
+      queue.add(async ()=>{
+        queryDeath(queue, name, idCard, count)
+      })
+    }
+
+  }).finally(()=>{
+    // content += rowData;
+  })
+}
+
+/**
+ * 宁享-批量查询多元死亡数据
+ * 
+ * @param {*} idCardFile 
+ * @param {*} prefixName 
+ * @param {*} startLine 
+ * @param {*} thread 
+ */
+export async function batchQueryDeath(idCardFile, prefixName, startLine=0, thread=1) {
+    
+    const data = fs.readFileSync(idCardFile, 'utf8');
+    const queue = new PQueue({ concurrency: thread });
+
+    let list = data.split('\n');
+
+    for(let i=startLine; i<list.length; i++){
+      let arr = list[i];
+      let idCard =arr.trim();
+      let name = prefixName + i;
+
+      //   logger.error(name + ',' +  idCard);
+      queue.add(async () => {
+        queryDeath(queue, name, idCard);
+      });
+    }
+
+    // writeFileWithBOM('./death.xls', content);
+
+}
   
   
 /**
  * 宁享-批量查询多元死亡数据
  * 
  * @param {*} idCardFile 
- * @param {*} tag 
+ * @param {*} prefixName 
  * @param {*} startLine 
  * @param {*} thread 
  */
-export async function batchQueryDeathData(idCardFile, tag, startLine=0, thread=1) {
+export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, thread=1) {
 
     //  await fs.readFile('./oldman.txt', 'utf8', (err, data) => {
     //     if (err) {
@@ -48,51 +115,75 @@ export async function batchQueryDeathData(idCardFile, tag, startLine=0, thread=1
     //       return;
     //     }
     //   });
-      
-      const data = fs.readFileSync(idCardFile, 'utf8');
-      const queue = new PQueue({ concurrency: thread });
-  
-      let list = data.split('\n');
-      let content = "";
-      for(let i=startLine; i<list.length; i++){
-        let arr = list[i];
-        let idCard =arr.trim();
-        let name = tag + i;
-        // let name = tag;
-  
-        //   logger.error(name + ',' +  idCard);
-        queue.add(async () => {
-          let rowData = '';
-          await queryDeathInfo(name, idCard)
-          .then((resp)=>{
-            // logger.info(name + ',' +  idCard + ', 成功, ' +  JSON.stringify(resp.data) );
-            const key = CryptoJS.enc.Utf8.parse('j#vcZgVXusQ6MQQS');        
-            let decrpedData = CryptoJS.AES.decrypt(resp.data.encryption, key, {
-                iv: key,
-                mode: CryptoJS.mode.CFB,
-                padding: CryptoJS.pad.NoPadding
-            }).toString(CryptoJS.enc.Utf8);
 
-            let response = JSON.parse(decrpedData);
-            let data = response.data;
-            if(response.code === 0){
-              rowData = idCard + ', 成功, ' + data.id + ',' + data.zxbs + ',' + name + ',' +   data.deathdate;
-            }else{
-              rowData = idCard + ', 失败, ' + data.id + ',' + data.zxbs + ',' +  name + ',' +   data.deathdate;
-            }
-            logger.info( rowData + ',' + decrpedData);
-          })
-          .catch((err)=>{
-            rowData = name + ',' +  idCard + ', 失败-异常';
-            logger.error(name + ',' +  idCard + ', 失败, ' + err);
-          }).finally(()=>{
-            content += rowData;
-          })
-        }
-        );
+    // 创建可写流
+    const fsws = fs.createWriteStream('dest.txt', {
+      encoding: 'utf8',
+      flags: 'w' // 'w' 写入, 'a' 追加
+    });
+
+    // 监听事件
+    fsws.on('open', () => {
+      console.log('文件流已打开');
+    });
+  
+    fsws.on('ready', () => {
+      console.log('文件流已准备就绪');
+    });
+  
+    fsws.on('finish', () => {
+      console.log('所有数据已写入');
+    });
+  
+    fsws.on('error', (err) => {
+      console.error('流写入错误:', err);
+    });
+
+    
+    const data = fs.readFileSync(idCardFile, 'utf8');
+    const queue = new PQueue({ concurrency: thread });
+
+    let list = data.split('\n');
+    let content = "";
+    for(let i=startLine; i<list.length; i++){
+      let arr = list[i];
+      let idCard =arr.trim();
+      let name = prefixName + i;
+
+      logger.error(name + ',' +  idCard);
+      queue.add(async () => {
+        let rowData = '';
+        await queryDeathInfo(name, idCard).then((resp)=>{
+          
+          let jsonData = resp.data;
+          // logger.info(name + ',' +  idCard + ', 成功, ' + JSON.stringify(jsonData) );
+          let decryptData = encryptUtil.decrypt(jsonData, Authorization)
+          // logger.info(name + ',' +  idCard + ', 成功, ' + decryptData );
+
+          let response = JSON.parse(decryptData);
+          logger.info(response);
+
+          let data = response.data;
+          if(response.code === 0){
+            rowData = idCard + ',' +  name + ',成功, ' + data.id + ',' + data.zxbs + ',' +   data.deathdate + ',' +   data.swrq;
+          }else{
+            rowData = idCard + ',' +  name + ',失败, ' + data.id + ',' + data.zxbs + ',' +   data.deathdate + ',' +   data.swrq;
+          }
+          logger.info( rowData + ',' + decryptData);
+        }).catch((err)=>{
+
+          rowData = idCard + ', ' +  name + ',异常';
+          logger.error(idCard + ',' + name + ',异常,' + err);
+
+        }).finally(()=>{
+
+          fsws.write(rowData + '\n');
+          // content += rowData;
+
+        })
       }
-
-      writeFileWithBOM('./death.xls', content);
+      );
+    }
 
   }
   

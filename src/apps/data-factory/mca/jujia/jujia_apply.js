@@ -10,14 +10,13 @@ import { jujiaServiceList } from './data/constants.js'
  */
 export async function autoSubmitApply(size=1){
 
-  
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()
   let prjInfo = prjInfoResp.data.data;
   let ahbx1401 = prjInfo.ahbx1401;  // code
   let ahbx1402 = prjInfo.ahbx1402;  // 城市低收入老年人认定标准
   let ahbx1411 = prjInfo.ahbx1411;  // 农村低收入老年人认定标准
-  // let jjsm09List = prjInfo.jjsm09List;  // 居家服务项目列表信息  ( 好像不能用，得排查一下)
+  // let jjsm09List = prjInfo.jjsm09List;  // 居家服务项目列表信息  ( 好像不能用，得排查一下 , 获取出来的数据多一个    ahae0621: '99'， ahae0618: '12' )
   // logger.info("查询项目信息:", prjInfo)
 
 
@@ -53,7 +52,7 @@ export async function autoSubmitApply(size=1){
       ahae0618: item.ahae0618,
     }
   })
-  // logger.info("生成服务项目列表:", jjsm04DtoList)
+  logger.info("生成服务项目列表:", jjsm04DtoList)
 
 
   // 5. 获取申请列表
@@ -91,7 +90,7 @@ export async function autoSubmitApply(size=1){
       jjsm04DtoList: jjsm04DtoList,
     }
 
-    console.log(param)
+    // console.log(param)
     queue.add(async () => 
       await jujiaApplySubmit(param).then(resp => {
         logger.info(resp.data)
