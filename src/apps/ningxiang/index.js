@@ -10,7 +10,7 @@ import  ServiceOrderCheck from './jinmin.js';
 
 
 // 多元死亡数据查询
-batchQueryDeathData('./oldman.txt', 'A', 0, 100);
+batchQueryDeathData('./oldman.txt', 'C', 0, 100);
 // processData();
 
 // 宁享-能力等级评估

@@ -7,7 +7,7 @@ import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
 
 
-let Authorization = 'Bearer 895a9dcb-c7c1-43f6-a033-edc1bf3bbe67';
+let Authorization = 'Bearer f38c3c3d-52e0-46d1-ba89-0c3ac9c6dd29';
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = Authorization;
   return config;
