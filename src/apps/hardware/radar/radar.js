@@ -1,30 +1,8 @@
-const log4js = require('log4js');
-
-log4js.configure({
-  appenders: {
-    file: { type: 'file', filename: 'logs/app.log' },
-    console: { type: 'console' },
-    out: { 
-      type: 'stdout',
-      layout: {
-        type: 'pattern',
-        pattern: '%[%d{hh:mm:ss.SSS} [%p]%] %m'
-        // pattern: '%[%d{yyyy-MM-dd hh:mm:ss.SSS} [%p]%] %m'
-      }
-    },
-  },
-  categories: {
-    // default: { appenders: ['file', 'console', 'out'], level: 'debug' }
-    default: { appenders: ['file', 'out'], level: 'debug' }
-  }
-});
-
-const logger = log4js.getLogger();
-
+import { logger } from '../../../common/logger.js';
 
 let g_posture = "未知"
 let oldTime = new Date();
-exports.handlerMessage = function (topic, message){
+export function handlerMessage (topic, message){
   // message 是 Buffer 类型，需要转换为字符串
   const hexString = message.toString('hex');
   // console.log(`MQTTX Message ${topic}: ${hexString}`)
@@ -40,15 +18,15 @@ exports.handlerMessage = function (topic, message){
     console.log("失败1")
   }
 
-
   // if(com==1){
   //   return;
   // }
 
-
   let peopleNum = message[11];
   const deviceSn = parseDeviceSn(hexString);
-  if(deviceSn =="13300000341000000169"){
+  // console.log("deviceSn", deviceSn)
+  // if(deviceSn =="13300000341000000461"){
+    if(deviceSn =="13300000341000000167"){
 
     logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
     logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 

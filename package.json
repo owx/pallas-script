@@ -6,6 +6,11 @@
   "description": "nodejs cli program",
   "keywords": [],
   "type": "module",
+  "imports": {
+    "#utils/*": "./src/utils/*.js",
+    "#components/*": "./src/components/*.js",
+    "@/*": "./src/*.js"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node ./src/servers/ws.mjs",
@@ -15,25 +20,15 @@
     "buildzz": "npm i -g"
   },
   "bin": {
-    "lab": "./src/apps/lab/index.js",
-    "df": "./src/apps/data-factory/index.js",
-    "nx": "./src/apps/ningxiang/index.js",
-    "prt": "./src/apps/pressure/index.js",
-    "mqtt": "./src/apps/mqtt/index.js",
-    "encrypt": "./src/apps/encrypt/index.js",
-    "ast": "./src/apps/sast/index.js",
-    "sca": "./src/apps/keywords-scan/index.js",
-    "fp": "./src/apps/aplid/file-process.js",
-    "oss": "./src/apps/minio/index.js",
-    "ms": "./src/apps/menu-sync/index.js",
-    "omas": "./src/apps/om-audio-sync/index.js",
-    "ocr": "./src/apps/ocr/index.js",
-    "qr": "./src/apps/qrcode/index.js"
+    "ap": "./src/apps/aplid/index.js",
+    "hw": "./src/apps/hardware/index.js",
+    "dev": "./src/apps/development/index.js"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",
     "axios": "^1.11.0",
     "canvas": "^3.1.0",
+    "commander": "^14.0.1",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",

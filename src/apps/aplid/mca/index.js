@@ -8,13 +8,13 @@ import { autoAllocStatistic } from './jujia/jujia_alloc.js';
 // import { autoSubmitAlloc } from './homebed_alloc.js';
 
 
-export async function main() {
+export async function mcaMain() {
 
     // 街道提交申请
     // autoSubmitApply(100);
 
     // 街道审核
-    jiedaoAutoAudit ("刘勤", 100);
+    // jiedaoAutoAudit ("刘勤", 100);
 
     // 区县审核
     // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")

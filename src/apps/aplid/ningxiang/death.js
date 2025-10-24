@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import axios from 'axios';
 import fs from 'fs';
-import { encryptUtil } from '../../common/EncryptUtil.ts'
-import  { logger } from '../../common/logger.js';
-import { writeFileWithBOM } from '../../common/file.js';
+import { encryptUtil } from '../../../common/EncryptUtil.ts'
+import  { logger } from '../../../common/logger.js';
+// import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
 
 
-let Authorization = 'Bearer f38c3c3d-52e0-46d1-ba89-0c3ac9c6dd29';
+let Authorization = 'Bearer b3a63e5c-3607-4c57-84f0-aa991ab10d73';
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = Authorization;
   return config;
@@ -30,7 +30,6 @@ function queryDeathInfo(name, idCard){
   
     return axios.post('http://180.101.239.5:11762/bussiness/dpDeathQueryRecords/query', data);
 }
-
 
 
 async function queryDeath(queue, name, idCard, count=0){
