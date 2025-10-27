@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { generateImageWithQRCodeAndText } from './core.js';
+import { logger } from '#lib/logger.js';
 
-
-function app_start() {
+export function app_start() {
 
   // 使用示例
   const qrText = 'https://www.example.com';
@@ -15,4 +15,6 @@ function app_start() {
 
 }
 
-app_start();
+export function qrMain(){
+  logger.info("helowwxx sdsd")
+}

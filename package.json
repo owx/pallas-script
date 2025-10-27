@@ -7,9 +7,9 @@
   "keywords": [],
   "type": "module",
   "imports": {
-    "#utils/*": "./src/utils/*.js",
-    "#components/*": "./src/components/*.js",
-    "@/*": "./src/*.js"
+    "#src/*": "./src/*",
+    "#lib/*": "./src/common/*",
+    "#components/*": "./src/components/*.js"
   },
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,8 @@
   "bin": {
     "ap": "./src/apps/aplid/index.js",
     "hw": "./src/apps/hardware/index.js",
-    "dev": "./src/apps/development/index.js"
+    "dev": "./src/apps/develop/index.js",
+    "pa": "./src/servers/pallas/index.js"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",

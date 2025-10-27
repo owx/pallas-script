@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import { qrMain } from './qrcode/index.js';
 
 const program = new Command();
 
@@ -9,13 +10,13 @@ program
   .version('1.0.0');
 
 program
-  .command('start')
-  .description('启动开发服务器')
+  .command('qr')
+  .description('QRCode工具')
   .option('-p, --port <number>', '端口号', '3000')
   .option('-h, --host <string>', '主机名', 'localhost')
   .action((options) => {
-    console.log(`启动服务器在 ${options.host}:${options.port}`);
-    // 执行启动逻辑
+    console.log(`运行QRCode工具`);
+    qrMain();
   });
 
 program

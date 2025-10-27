@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import StockDataService from './StockDataService.js';
 import express from 'express';
 import cors from 'cors';
@@ -197,7 +198,7 @@ app.get('/', (req, res) => {
 });
 
 // 启动服务
-async function startServer() {
+export async function startServer() {
   try {
     console.log('🚀 启动股票实时数据服务...');
     
@@ -257,4 +258,4 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // 启动服务
-startServer();
+// startServer();
