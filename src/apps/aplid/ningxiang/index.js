@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-import { batchQueryDeathData, batchQueryDeath, processData} from './death.js';
+// import { batchQueryDeathData, batchQueryDeath, processData} from './death.js';
 // import { autoFillTable } from './assess.js';
 // import { parseSqlData } from './sql.js';
 // import  ServiceOrderCheck from './jinmin.js';
-
 
 export async function nxMain() {
     
@@ -12,7 +11,7 @@ export async function nxMain() {
 
 
 // 多元死亡数据查询
-batchQueryDeathData('./oldman.txt', 'D', 0, 100);
+// batchQueryDeathData('./oldman.txt', 'D', 0, 100);
 // processData();
 
 // 宁享-能力等级评估

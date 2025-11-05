@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import { bcMain } from './blockchain/index.js';
+import { cfMain } from './chifeng/index.js';
 import { mcaMain } from './mca/index.js';
 import { nxMain } from './ningxiang/index.js';
 
@@ -9,6 +11,15 @@ program
   .name('ap')
   .description('Aplid Project Process CLI Tools')
   .version('1.0.0');
+
+program
+  .command('bc')
+  .description('南京市政务云区块链服务平台工具')
+  // .option('-o, --output <dir>', '输出目录', 'dist')
+  // .option('--minify', '是否压缩')
+  .action((options) => {
+    bcMain(options.size);
+  });
 
 program
   .command('mca')
@@ -44,7 +55,7 @@ program
     // 执行构建逻辑
   });
 
-  program
+program
   .command('ms')
   .description('5.1平台菜单同步工具')
   .option('-o, --output <dir>', '输出目录', 'dist')

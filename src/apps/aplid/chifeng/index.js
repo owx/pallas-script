@@ -2,7 +2,7 @@
 import fs from 'fs';
 import { downloadFiles, zipFolderWithAdm, getEnvAssessList, getEnvAssessDetail, decryptData } from "./core.js";
 
-export async function main(params) {
+export async function cfMain(params) {
 
     let envAssessListResp = await getEnvAssessList("1960238435465662466", 10)
     envAssessListResp = await decryptData(envAssessListResp.data.encryption)
