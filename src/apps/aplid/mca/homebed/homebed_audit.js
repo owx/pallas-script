@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '../../../../common/logger.js';
+import  { logger } from '#utils/logger.js';
 import {
   queryPrjInfo,
   homeBedOrgList,
@@ -10,13 +10,13 @@ import {
   homebedGovAuditList,
   homebedGovAuditApprove,
   homebedGovCompleteList
-} from "../mca_core.js";
+} from "../core/mca_core.js";
 
 
 /**
  * 街道账号，自动审批
  */
-export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
+export async function hbJiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
 
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()
@@ -73,7 +73,7 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
  * 区账号，自动审批
  * 
  */
-export async function quxianAutoAudit(areaCode, name="", size=1, jobTitle="主任"){
+export async function hbQuxianAutoAudit(areaCode, name="", size=1, jobTitle="主任"){
 
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()

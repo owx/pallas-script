@@ -1,9 +1,28 @@
 #!/usr/bin/env node
-// import fs from 'fs';
-// import PQueue from 'p-queue';
-// import { writeFileWithBOM } from '../../../common/file.js';
-// import  { logger } from '../../../common/logger.js';
-import request from './request.js';
+import { axiosManager } from '#utils/AxiosManager.js';
+
+
+/**
+ * 全国养老服务信息系统
+ * https://ylfw.mca.gov.cn/
+ */
+
+// 全国养老服务信息系统
+// 全国养老服务信息平台（管理端）
+// 2025年提升行动项目
+// 居家养老上门服务
+// 街道申请，街道审批，县审批
+// 
+
+const authorization = 'Bearer 270f56ca-7b90-401c-87c0-063119a751a3';
+
+const request = axiosManager.createInstance("mca", {
+  baseURL: "https://ylfw.mca.gov.cn",
+  timeout: 5000,
+  headers: {
+    authorization: authorization,
+  }
+})
 
 
 /*****************************************  通用接口  ****************************************** */
@@ -250,6 +269,67 @@ export async function jujiaAllocList(flag, size=1, year=2025){
 
   return request.post(url, null, {params: params});
 }
+
+
+/**
+ * 居家养老上门服务-服务费用确认-列表
+ * @param {*} size  分页查询数量
+ * @param {*} flag  0 未确认， 1 已确认
+ * @param {*} year  年份
+ * @returns 
+ */
+export async function jujiaFeeConfirmList(flag, size=1, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingallocate/serviceChargeList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: year,
+    flag: flag,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/**
+ * 居家养老上门服务-服务费用确认-历史费用列表
+ * @param {*} size  分页查询数量
+ * @param {*} ahbx1501
+ * @param {*} year  年份
+ * @returns 
+ */
+export async function jujiaFeeHistoryList(ahbx1501, size=1, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingallocate/serviceChargeListHistory';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: year,
+    ahbx1501: ahbx1501,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 居家养老上门服务-服务费用确认-历史费用列表导出
+ * @param {*} size  分页查询数量
+ * @param {*} ahbx1501
+ * @param {*} year  年份
+ * @returns 
+ */
+export async function jujiaFeeHistoryExport(ahbx1501, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingallocate/serviceChargeListHistoryExport';
+
+  let params = {
+    year: year,
+    ahbx1501: ahbx1501,
+  }
+
+  return request.post(url, null, {params: params, responseType: 'stream'});
+}
+
 
 
 /*******以上**********************************  居家养老上门服务  ****************************************** */

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '../../../../common/logger.js';
+import  { logger } from '#utils/logger.js';
 import {
   queryUserInfo,
   queryPrjInfo,
@@ -10,12 +10,12 @@ import {
   jujiaAuditApprove,
   jujiaGovAuditList,
   jujiaGovAuditApprove,
-} from "../mca_core.js";
+} from "../core/mca_core.js";
 
 /**
  * 街道账号，自动审批
  */
-export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
+export async function jjJiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
 
   // 1. 获取用户登录信息（主要是获取用户登录姓名）
   let uesrInfoResp = await queryUserInfo()
@@ -87,7 +87,7 @@ export async function jiedaoAutoAudit(name, size=1, jobTitle="工作人员"){
 /**
  * 区账号，自动审批
  */
-export async function quxianAutoAudit(name, jobTitle="主任"){
+export async function jjQuxianAutoAudit(name, jobTitle="主任"){
 
   // 1. 获取用户登录信息（主要是获取用户登录姓名）
   let uesrInfoResp = await queryUserInfo()

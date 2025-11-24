@@ -8,7 +8,8 @@
   "type": "module",
   "imports": {
     "#src/*": "./src/*",
-    "#lib/*": "./src/common/*",
+    "#utils/*": "./src/utils/*",
+    "#common/*": "./src/common/*",
     "#components/*": "./src/components/*.js"
   },
   "main": "index.js",

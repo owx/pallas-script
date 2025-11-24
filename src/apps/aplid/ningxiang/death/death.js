@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import axios from 'axios';
 import fs from 'fs';
-import { encryptUtil } from '../../../common/EncryptUtil.ts'
-import  { logger } from '../../../common/logger.js';
+import { encryptUtil } from '#utils/EncryptUtil.ts'
+import  { logger } from '#utils/logger.js';
 // import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
 
 
-let Authorization = 'Bearer b3a63e5c-3607-4c57-84f0-aa991ab10d73';
+let Authorization = 'Bearer 3f83ac62-eb73-49cf-9cdb-2b4a104a18ce';
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = Authorization;
   return config;
@@ -160,7 +160,7 @@ export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, t
           // logger.info(name + ',' +  idCard + ', 成功, ' + decryptData );
 
           let response = JSON.parse(decryptData);
-          logger.info(response);
+          // logger.info(response);
 
           let data = response.data;
           if(response.code === 0){

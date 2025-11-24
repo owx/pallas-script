@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '../../../../common/logger.js';
+import  { logger } from '#utils/logger.js';
 import {
   queryPrjInfo,
   homeBedOrgList,
   homeBedApplyList,
   homeBedApplySave,
   homeBedApplySubmit,
-} from "../mca_core.js";
+} from "../core/mca_core.js";
 
 
 /**
  * 主入口，自动化处理
  */
-export async function autoSubmitApply(areaCode, size=0){
+export async function hbAutoSubmitApply(areaCode, size=0){
 
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()

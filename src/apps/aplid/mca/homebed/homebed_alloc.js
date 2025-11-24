@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '../../../../common/logger.js';
+import  { logger } from '#utils/logger.js';
 import {
   homebedAllocList,
   homebedEmployeeList,
   homebedAllocSubmit,
-} from "../mca_core.js";
+} from "../core/mca_core.js";
 
 
 /**
  * 主入口，自动化处理
  */
-export async function autoSubmitAlloc(servicerName="", size=1){
+export async function hbAutoSubmitAlloc(servicerName="", size=1){
 
   // 1. 获取服务人员列表
   let servicerListResp = await homebedEmployeeList()

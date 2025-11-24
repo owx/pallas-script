@@ -1,35 +1,65 @@
 #!/usr/bin/env node
-import { autoSubmitApply } from './jujia/jujia_apply.js';
-import { jiedaoAutoAudit, quxianAutoAudit } from './jujia/jujia_audit.js';
-import { autoAllocStatistic } from './jujia/jujia_alloc.js';
+import { hbAutoSubmitApply } from './homebed/homebed_apply.js';
+import { hbJiedaoAutoAudit, hbQuxianAutoAudit } from './homebed/homebed_audit.js';
+import { hbAutoSubmitAlloc } from './homebed/homebed_alloc.js';
 
-// import { autoSubmitApply } from './homebed_apply.js';
-// import { jiedaoAutoAudit, quxianAutoAudit } from './homebed_audit.js';
-// import { autoSubmitAlloc } from './homebed_alloc.js';
+import { jjAutoSubmitApply } from './jujia/jujia_apply.js';
+import { jjJiedaoAutoAudit, jjQuxianAutoAudit } from './jujia/jujia_audit.js';
+import { jjAutoAllocStatistic } from './jujia/jujia_alloc.js';
+import { jjAutoJujiaFeeHistoryExport } from './jujia/jujia_fee.js';
 
+export async function mcaMain(mode, size) {
 
-export async function mcaMain() {
+    switch(mode){
+        case 'homebed':
 
-    // 街道提交申请
-    // autoSubmitApply(100);
+            // 街道提交申请
+            // hbAutoSubmitApply(100);
 
-    // 街道审核
-    // jiedaoAutoAudit ("刘勤", 100);
+            // 街道审核
+            // hbJiedaoAutoAudit ("刘勤", 17);
 
-    // 区县审核
-    // quxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
-    
-    // （家床）提交初审？
-    // autoSubmitAlloc("邹元珍", 1);
+            // 区县审核
+            // hbQuxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
+                
+            // （家床）提交初审？
+            // hbAutoSubmitAlloc("邹元珍", 1);
 
-    // 家床统计数据
-    // autoAllocStatistic("d:\\temp\\新源.csv", 500);
+            break;
+
+        case 'jujia':
+
+            // 街道提交申请
+            // jjAutoSubmitApply(100);
+
+            // 街道审核
+            // jjJiedaoAutoAudit ("刘勤", 17);
+
+            // 区县审核
+            // jjQuxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
+
+            // 统计数据
+            //jjAutoAllocStatistic("d:\\temp\\新源.csv", 500);
+
+            // jjAutoJujiaFeeHistoryExport(".", size);
+
+            break;
+
+        default:
+            jjAutoJujiaFeeHistoryExport(".", size);
+            break;
+    }
 
 }
 
 
 
 /****************   需求记录
+
+2025/11/22
+shfw654023000001    Ylz@2025102810
+shfw654021000001    Ylz@2025102810
+
 
 2025/10/20 yinli  吉里于孜镇
 账号：jz2024  密码： LIUqin8@jz
