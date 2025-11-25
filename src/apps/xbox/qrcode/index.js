@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { generateImageWithQRCodeAndText } from './core.js';
-import { logger } from '#lib/logger.js';
+import { logger } from '#utils/logger.js';
 
 export function app_start() {
 

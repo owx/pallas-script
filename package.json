@@ -22,8 +22,8 @@
   },
   "bin": {
     "ap": "./src/apps/aplid/index.js",
+    "xbox": "./src/apps/xbox/index.js",
     "hw": "./src/apps/hardware/index.js",
-    "dev": "./src/apps/develop/index.js",
     "pa": "./src/servers/pallas/index.js"
   },
   "dependencies": {
