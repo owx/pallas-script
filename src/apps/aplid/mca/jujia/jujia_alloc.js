@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
 import  { logger } from '#utils/logger.js';
-import { writeFileWithBOM } from '#utils/file.js';
+import { writeFileWithBOM } from '#utils/FileUtils.js';
 
 import {
   jujiaAllocList,

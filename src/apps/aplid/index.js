@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { bcMain } from './blockchain/index.js';
+import { cpMain } from './city-platform/index.js';
 import { cfMain } from './chifeng/index.js';
 import { mcaMain } from './mca/index.js';
 import { nxMain } from './ningxiang/index.js';
@@ -45,17 +46,27 @@ program
   });
 
 program
+  .command('cp')
+  .description('市平台6.0&赤峰平台工具集')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-l, --limit <number>', '批量处理数量', '1')
+  .option('-o, --output <dir>', '输出目录', '.')
+  .option('--minify', '是否压缩')
+  .action((options) => {
+    console.log(`运行CP工具(参数: mode=${options.mode}, size=${options.size})`);
+    cpMain(options.mode, options.limit, options.output);
+  });
+
+program
   .command('cf')
   .description('赤峰市养老平台批量数据处理工具集')
   .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-s, --size <number>', '批量处理数量', '1')
   .option('-o, --output <dir>', '输出目录', 'dist')
   .option('--minify', '是否压缩')
   .action((options) => {
-    console.log(`构建到目录: ${options.output}`);
-    if (options.minify) {
-      console.log('启用压缩');
-    }
-    // 执行构建逻辑
+    console.log(`运行CF工具(参数: mode=${options.mode}, size=${options.size})`);
+    cfMain(options.mode, options.size);
   });
 
 program

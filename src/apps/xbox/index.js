@@ -33,6 +33,16 @@ program
   });
 
 program
+  .command('lab')
+  .description('Lab实验室工具')
+  .option('-p, --port <number>', '端口号', '3000')
+  .option('-h, --host <string>', '主机名', 'localhost')
+  .action((options) => {
+    console.log(`运行Lab实验室工具`);
+    labMain();
+  });
+
+program
   .command('build')
   .description('构建项目')
   .option('-o, --output <dir>', '输出目录', 'dist')
@@ -43,16 +53,6 @@ program
       console.log('启用压缩');
     }
     // 执行构建逻辑
-  });
-
-program
-  .command('lab')
-  .description('Lab实验室工具')
-  .option('-p, --port <number>', '端口号', '3000')
-  .option('-h, --host <string>', '主机名', 'localhost')
-  .action((options) => {
-    console.log(`运行Lab实验室工具`);
-    labMain();
   });
 
 program.parse();
