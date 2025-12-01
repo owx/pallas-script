@@ -1,10 +1,10 @@
+#!/usr/bin/env node
 import fs from 'fs';
 import PQueue from 'p-queue';
 import { encryptUtil } from '#src/utils/EncryptUtil.ts';
 import { zipFolderWithAdm, downloadFiles } from '#src/utils/FileUtils.js';
 import { fbImplementPage, fbImplementOne } from './core.js';
 
-const key='j#vcZgVXusQ6MQQS';
 
 /**
  * 下载指定 施工单位 的， 实施改造阶段的图片（改造前、改造后、环境情况）
@@ -14,7 +14,7 @@ const key='j#vcZgVXusQ6MQQS';
 export async function processImplementImages(implementRenovationUnit, limit=1) {
 
     let implementListResp = await fbImplementPage(implementRenovationUnit, limit)
-    implementListResp = await encryptUtil.aesDecrypt(key, implementListResp.data.encryption)
+    implementListResp = encryptUtil.aesDecrypt(implementListResp.data.encryption)
     implementListResp = JSON.parse(implementListResp);
     let implementList = implementListResp.data.records;
     // console.log(implementList.length)
@@ -29,7 +29,7 @@ export async function processImplementImages(implementRenovationUnit, limit=1) {
         
         queue.add(async () => {
             let implementDetailResp = await fbImplementOne(id, idCard, subprojectId);
-            implementDetailResp = await encryptUtil.aesDecrypt(key, implementDetailResp.data.encryption)
+            implementDetailResp = encryptUtil.aesDecrypt(implementDetailResp.data.encryption)
             implementDetailResp = JSON.parse(implementDetailResp);
             let implementDetail = implementDetailResp.data;
             // console.log(implementDetail)

@@ -10,9 +10,9 @@ class EncryptUtil {
         if((!token) || (!encryptData.timestamp)){
             // console.log("start exception decrypt 1");
             try{
-                return this.aesDecrypt(defaultKey1, encryptData.encryption)
+                return this.aesDecrypt(encryptData.encryption, defaultKey1)
             }catch(e2){
-                return this.aesDecrypt(defaultKey2, encryptData.encryption)
+                return this.aesDecrypt(encryptData.encryption, defaultKey2)
             }
         }
 
@@ -29,7 +29,7 @@ class EncryptUtil {
             let key1 = token.substr(start, 16);
             // console.log("key1", key1);
 
-            let firstLevelData = this.aesDecrypt(key1, encryptData.encryption);
+            let firstLevelData = this.aesDecrypt(encryptData.encryption, key1);
             // console.log("firstLevelData", firstLevelData);
 
             // 二层解密
@@ -50,7 +50,7 @@ class EncryptUtil {
             // console.log("secordLevelData", secordLevelData);
 
 
-            let finalLevelData = this.aesDecrypt(key2, secordLevelData);
+            let finalLevelData = this.aesDecrypt(secordLevelData, key2);
             // console.log("finalLevelData", finalLevelData);
 
             return finalLevelData;
@@ -58,14 +58,14 @@ class EncryptUtil {
         }catch(e){
             // console.log("start exception decrypt 2");
             try{
-                return this.aesDecrypt(defaultKey1, encryptData.encryption)
+                return this.aesDecrypt(encryptData.encryption, defaultKey1)
             }catch(e2){
-                return this.aesDecrypt(defaultKey2, encryptData.encryption)
+                return this.aesDecrypt(encryptData.encryption, defaultKey2)
             }
         }
     }
 
-    aesDecrypt(keystr: string, data: string){
+    aesDecrypt(data: string, keystr: string='j#vcZgVXusQ6MQQS'){
         const key = CryptoJS.enc.Utf8.parse(keystr);        
         let decryptData = CryptoJS.AES.decrypt(data, key, {
             iv: key,
@@ -75,6 +75,5 @@ class EncryptUtil {
         
         return decryptData;
     }
-
 
 }export const encryptUtil = new EncryptUtil();

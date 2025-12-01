@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { downloadAllPacks } from './homebed/index.js';
 import { dmExample } from './order/index.js';
 import { tryDifferentMethods } from './order/dm.js';
 
@@ -16,7 +15,6 @@ export async function cfMain(mode, size) {
 
         case 'homebed':
         default:
-            downloadAllPacks();
             break;
     }
 }

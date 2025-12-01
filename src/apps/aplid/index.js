@@ -50,10 +50,11 @@ program
   .description('市平台6.0&赤峰平台工具集')
   .option('-m, --mode <string>', '工作模式', 'default')
   .option('-l, --limit <number>', '批量处理数量', '1')
+  .option('-n, --name <string>', '关键字名称')
   .option('-o, --output <dir>', '输出目录', '.')
   .option('--minify', '是否压缩')
   .action((options) => {
-    console.log(`运行CP工具(参数: mode=${options.mode}, size=${options.size})`);
+    console.log(`运行CP工具(参数: mode=${options.mode}, limit=${options.limit})`);
     cpMain(options.mode, options.limit, options.output);
   });
 

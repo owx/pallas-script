@@ -22,7 +22,7 @@ const request = axiosManager.createInstance("mca", {
 
 /*************************** 2. 环境评估 *********************************/
 
-export async function getEnvAssessList(subprojectId='1930932494178140162', size=1, envAssessmentApprovalStatus=3) {
+export async function fbEnvAssessmentPage(subprojectId='1930932494178140162', size=1, envAssessmentApprovalStatus=3) {
   let url = '/management/fbEnvAssessment/page';
 
   let body ={
@@ -42,7 +42,7 @@ export async function getEnvAssessList(subprojectId='1930932494178140162', size=
   return request.post(url, body);
 }
 
-export async function getEnvAssessDetail(idCard='710000190611051585', subprojectId='1930932494178140162') {
+export async function fbEnvAssessmentOne(idCard='710000190611051585', subprojectId='1930932494178140162') {
     let url = '/management/fbEnvAssessment/one';
 
     let body = {

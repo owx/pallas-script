@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 import fs from 'fs';
-import { downloadFiles, zipFolderWithAdm, getEnvAssessList, getEnvAssessDetail, decryptData } from "./core.js";
+import PQueue from 'p-queue';
+import { encryptUtil } from '#src/utils/EncryptUtil.ts';
+import { zipFolderWithAdm, downloadFiles } from '#src/utils/FileUtils.js';
+import { fbEnvAssessmentPage, fbEnvAssessmentOne } from './core.js';
 
-export async function downloadAllPacks(params) {
 
-    let envAssessListResp = await getEnvAssessList("1960238435465662466", 10)
-    envAssessListResp = await decryptData(envAssessListResp.data.encryption)
+export async function processEnvAssessImages(implementRenovationUnit, limit=1) {
+
+    let envAssessListResp = await fbEnvAssessmentPage("1960238435465662466", limit)
+    envAssessListResp = encryptUtil.aesDecrypt(envAssessListResp.data.encryption)
     let envAssessList = envAssessListResp.data.records;
     console.log(envAssessList.length)
     for(let i=0; i<envAssessList.length; i++){
