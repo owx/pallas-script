@@ -7,10 +7,10 @@ import { queryNjCzrkWithZd } from './core.js';
 // import { initDB, saveData, fetchData, dynamicInsert } from '#utils/MysqlUtils.js';
 
 
-export async function processHujiData(idCardFile, thread=100, startLine=400000, limit=100000) {
+export async function processHujiData(idCardFile, thread=200, startLine=500000, limit=100000) {
     console.log("常驻人口查询！")
 
-    // 初始化连接池
+    // 1. 初始化数据库连接池
     const pool = mysql.createPool({
         host: '192.168.0.124',
         user: 'root',
@@ -23,22 +23,23 @@ export async function processHujiData(idCardFile, thread=100, startLine=400000, 
         enableKeepAlive: false,
         keepAliveInitialDelay: 0,
     });
-  
-  // 创建插入器实例
     const mysqlUtils = new MysqlUtils(pool);
 
+    // 2. 读取待处理的身份证数据
     const data = fs.readFileSync(idCardFile, 'utf8');
+    let list = data.split('\n');
+    let size = startLine + limit;
+    size = size>list.length? list.length : size;
+
+    // 3. 创建并发任务处理队列
     const queue = new PQueue({
         concurrency: thread,
         // intervalCap: 100,
         // interval: 1000,
+        // autoStart: true,
     });
 
-    let list = data.split('\n');
-    
-    let size = startLine + limit;
-    size = size>list.length? list.length : size;
-
+    let failCount = 0;
     for(let i=startLine; i<size; i++){
         let arr = list[i];
         let idCard =arr.trim();
@@ -87,9 +88,33 @@ export async function processHujiData(idCardFile, thread=100, startLine=400000, 
 
             }).catch((err)=>{
                 logger.info(idCard + " - " + i + ' err:' + err);
+                failCount++;
+                // 当出现大量失败时，先暂停30s任务，然后再继续执行
+                // if(failCount > 1){
+                //     console.log("失败任务过多，暂停30s后再继续...")
+                //     queue.pause();
+                //     failCount = 0;
+
+                //     setTimeout(()=>{
+                //         console.log("恢复任务执行！")
+                //         queue.start();
+                //     }, 30000);
+                // }
             })
 
         });
+
+        // 如果队列积压太多，暂停一下
+        // if (queue.size > 1000) {
+        //     console.log(`队列积压 ${queue.size} 个任务，暂停添加...`);
+        //     queue.pause();
+            
+        //     // 等待队列处理一部分
+        //     await queue.onSizeLessThan(500);
+            
+        //     console.log("恢复添加新任务...");
+        //     queue.start();
+        // }
 
     }
 
@@ -125,7 +150,7 @@ export async function processHujiData(idCardFile, thread=100, startLine=400000, 
 
     // 等待所有任务完成
     queue.onIdle().then(() => {
-        console.log('所有任务完成');
+        console.log('所有任务完成, 失败:' + failCount);
         pool.end();
     });
 

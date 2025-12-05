@@ -8,7 +8,8 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // const authorization = 'Bearer 270f56ca-7b90-401c-87c0-063119a751a3';
 
 const request = axiosManager.createInstance("gongan", {
-    baseURL: "http://localhost:7001",
+    // baseURL: "http://localhost:7001",
+    baseURL: "http://192.168.0.66",
     timeout: 60000,
     headers: {
         // authorization: authorization,
