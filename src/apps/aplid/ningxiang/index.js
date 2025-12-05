@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-import { batchQueryDeathData, batchQueryDeath, processData} from './death/death.js';
+import { batchQueryDeathData, batchQueryDeath, processData} from './gongan/death.js';
 // import { autoFillTable } from './assess.js';
 // import { parseSqlData } from './sql.js';
 // import  ServiceOrderCheck from './jinmin.js';
-import { processHujiData } from "./gongan/index.js";
+import { processHujiData } from "./gongan/huji.js";
+import { test } from './gongan/index.js';
 
 export async function nxMain(mode, size) {
     switch(mode){
@@ -30,10 +31,12 @@ export async function nxMain(mode, size) {
             // checker.analysisOrderData();
             break;
 
-
-        case "gongan":
-        default:
+        case "huji":
             processHujiData("D:/Temp/nx/registered_population.txt");
+            break;
+
+        default:
+            test();
             break;
     }
 }
