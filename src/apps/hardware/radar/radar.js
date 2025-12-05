@@ -25,8 +25,11 @@ export function handlerMessage (topic, message){
   let peopleNum = message[11];
   const deviceSn = parseDeviceSn(hexString);
   // console.log("deviceSn", deviceSn)
-  // if(deviceSn =="13300000341000000461"){
-    if(deviceSn =="13300000341000000167"){
+
+    if(1){
+    // if(deviceSn =="13300000341000000461"){
+    // if(deviceSn =="13300000341000000167"){
+    // if(deviceSn =="19900000131000000436"){
 
     logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
     logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 
