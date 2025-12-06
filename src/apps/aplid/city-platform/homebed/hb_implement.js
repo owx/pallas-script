@@ -17,7 +17,7 @@ export async function processImplementImages(implementRenovationUnit, limit=1) {
     implementListResp = encryptUtil.aesDecrypt(implementListResp.data.encryption)
     implementListResp = JSON.parse(implementListResp);
     let implementList = implementListResp.data.records;
-    // console.log(implementList.length)
+    console.log(implementList.length)
 
     const queue = new PQueue({ concurrency: 1 });
 

@@ -4,11 +4,11 @@ import { axiosManager } from '#utils/AxiosManager.js';
 
 /*************************** 家庭床位建设 *********************************/
 
-const authorization = 'Bearer 14eb70a0-bfb5-4b0b-9e49-331d804fcfac';
+const authorization = 'Bearer 065cfe2c-d1bb-4f93-a17b-b6a910d6a9fa';
 
 const request = axiosManager.createInstance("mca", {
-  // baseURL: "https://chifeng-nx.njapld.com:7979",
-  baseURL: "https://apld-v6.njapld.com:20001",
+  baseURL: "https://chifeng-nx.njapld.com:7979",
+  // baseURL: "https://apld-v6.njapld.com:20001",
   timeout: 5000,
   headers: {
     authorization: authorization,
@@ -22,17 +22,17 @@ const request = axiosManager.createInstance("mca", {
 
 /*************************** 2. 环境评估 *********************************/
 
-export async function fbEnvAssessmentPage(subprojectId='1930932494178140162', size=1, envAssessmentApprovalStatus=3) {
+export async function fbEnvAssessmentPage(environmentEvaluationUnit, size=1, subprojectId='1960238435465662466', businessApprovalStatus=3) {
   let url = '/management/fbEnvAssessment/page';
 
   let body ={
     "current": 1,
     "size": size,
     "isCancel": 0,
-    "envAssessmentApprovalStatus": envAssessmentApprovalStatus,
+    "businessApprovalStatus": businessApprovalStatus,
+    "envAssessmentApprovalStatus": businessApprovalStatus,
     "subprojectId": subprojectId,
-    "isTrusted": true,
-    // "_vts": 1759043023658,
+    "environmentEvaluationUnit": environmentEvaluationUnit,
     "pageParaPO": {
       "current": 1,
       "size": size
@@ -63,7 +63,7 @@ export async function fbEnvAssessmentOne(idCard='710000190611051585', subproject
  * @param {*} businessApprovalStatus 
  * @returns 
  */
-export async function fbImplementPage(implementRenovationUnit, size=1, subprojectId='1954828803239837697', businessApprovalStatus=3) {
+export async function fbImplementPage(implementRenovationUnit, size=1, subprojectId='1960238435465662466', businessApprovalStatus=3) {
   let url = '/management/fbImplement/page';
 
   let body ={
@@ -72,10 +72,11 @@ export async function fbImplementPage(implementRenovationUnit, size=1, subprojec
     "isCancel": 0,
     "businessApprovalStatus": businessApprovalStatus,
     "subprojectId": subprojectId,
+    "implementType": businessApprovalStatus,
     "implementRenovationUnit": implementRenovationUnit,
     "pageParaPO": {
       "current": 1,
-      "size": size,
+      "size": size
     }
   }
 

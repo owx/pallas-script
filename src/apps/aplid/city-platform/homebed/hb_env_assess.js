@@ -6,12 +6,14 @@ import { zipFolderWithAdm, downloadFiles } from '#src/utils/FileUtils.js';
 import { fbEnvAssessmentPage, fbEnvAssessmentOne } from './core.js';
 
 
-export async function processEnvAssessImages(implementRenovationUnit, limit=1) {
+export async function processEnvAssessImages(environmentEvaluationUnit, limit=1) {
 
-    let envAssessListResp = await fbEnvAssessmentPage("1960238435465662466", limit)
+    let envAssessListResp = await fbEnvAssessmentPage(environmentEvaluationUnit, limit)
     envAssessListResp = encryptUtil.aesDecrypt(envAssessListResp.data.encryption)
+    envAssessListResp = JSON.parse(envAssessListResp);
     let envAssessList = envAssessListResp.data.records;
-    console.log(envAssessList.length)
+
+    console.log("需处理数据量: " + envAssessList.length)
     for(let i=0; i<envAssessList.length; i++){
         // console.log(">>",  envAssessList[i])
         downloadAssessImages(envAssessList[i])

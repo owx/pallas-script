@@ -6,8 +6,15 @@ import MysqlUtils from "#src/utils/MysqlUtils.js";
 import { queryNjCzrkWithZd } from './core.js';
 // import { initDB, saveData, fetchData, dynamicInsert } from '#utils/MysqlUtils.js';
 
+export async function processHujiData(idCardFile, thread=200, startLine=600000, limit=100000) {
+    
+    for(let i=0; i<12; i++){
+        console.log("第" + i + "批任务");
+        await processHujiDataInner(idCardFile, thread=200, startLine=600000 + i*100000, limit=100000);
+    }
+}
 
-export async function processHujiData(idCardFile, thread=200, startLine=500000, limit=100000) {
+export async function processHujiDataInner(idCardFile, thread=200, startLine=600000, limit=100000) {
     console.log("常驻人口查询！")
 
     // 1. 初始化数据库连接池
@@ -18,9 +25,9 @@ export async function processHujiData(idCardFile, thread=200, startLine=500000, 
         database: 'ningxiang',
         waitForConnections: true,
         connectionLimit: 10,
-        connectionTimeout: 10000,
+        connectionTimeout: 30000,
         queueLimit: 0,
-        enableKeepAlive: false,
+        enableKeepAlive: true,
         keepAliveInitialDelay: 0,
     });
     const mysqlUtils = new MysqlUtils(pool);
@@ -39,6 +46,8 @@ export async function processHujiData(idCardFile, thread=200, startLine=500000, 
         // autoStart: true,
     });
 
+    // const queueManager = new SmartQueueManager();
+
     let failCount = 0;
     for(let i=startLine; i<size; i++){
         let arr = list[i];
@@ -46,6 +55,7 @@ export async function processHujiData(idCardFile, thread=200, startLine=500000, 
 
         logger.info(idCard + " - " + i);
         queue.add(async () => {
+        // queueManager.addTask(async () => {
 
             // 1. 查询数据是否已经存在
             let findResult = await mysqlUtils.findOne("registered_njczrk", {SFZH: idCard})
@@ -149,9 +159,50 @@ export async function processHujiData(idCardFile, thread=200, startLine=500000, 
     // queue.clear();
 
     // 等待所有任务完成
-    queue.onIdle().then(() => {
+    await queue.onIdle().then(() => {
         console.log('所有任务完成, 失败:' + failCount);
         pool.end();
     });
 
+}
+
+class SmartQueueManager {
+    constructor() {
+        // 生产者队列：控制添加速度
+        this.producerQueue = new PQueue({ concurrency: 100 });
+        
+        // 消费者队列：真正执行任务
+        this.consumerQueue = new PQueue({ 
+            concurrency: 100,
+            autoStart: true
+        });
+        
+        this.maxBacklog = 1;
+        this.isAddingPaused = false;
+    }
+    
+    async addTask(task) {
+        // 如果消费者队列积压太多，暂停添加新任务
+        if (this.consumerQueue.size > this.maxBacklog && !this.isAddingPaused) {
+            console.log(`队列积压 ${this.consumerQueue.size} 个任务，暂停添加...`);
+            this.isAddingPaused = true;
+            
+            // 等待队列处理一部分
+            await this.consumerQueue.onSizeLessThan(500);
+            
+            console.log("恢复添加新任务...");
+            this.isAddingPaused = false;
+        }
+        
+        // 通过生产者队列控制添加速率
+        return this.producerQueue.add(async () => {
+            // 将任务添加到消费者队列
+            return this.consumerQueue.add(task);
+        });
+    }
+    
+    async waitForCompletion() {
+        await this.producerQueue.onIdle();
+        await this.consumerQueue.onIdle();
+    }
 }

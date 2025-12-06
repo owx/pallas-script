@@ -1,5 +1,7 @@
 import fs from 'fs';
 import axios from 'axios';
+import AdmZip from 'adm-zip';
+import path from 'path';
 
 
 /**
@@ -24,6 +26,7 @@ export async function downloadFiles(urlsStr, prefix) {
     let urls = [];
     if(urlsStr.indexOf(',')>0){
       urls= urlsStr.split(',');
+      // urls = urls.map(item => baseUrl + item);
     }else{
       urls.push(urlsStr);
     }
@@ -38,6 +41,11 @@ export async function downloadFiles(urlsStr, prefix) {
 }
 
 export async function downloadFile(url, dest) {
+    const baseUrl = "https://chifeng-nx.njapld.com:7979";
+    if(url.indexOf("http:")!==0){
+      url = baseUrl + url;
+    }
+
     const writer = fs.createWriteStream(dest);
     
     const request = axios.create({baseURL: url});
