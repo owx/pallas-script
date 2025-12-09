@@ -6,15 +6,15 @@ import MysqlUtils from "#src/utils/MysqlUtils.js";
 import { queryNjCzrkWithZd } from './core.js';
 // import { initDB, saveData, fetchData, dynamicInsert } from '#utils/MysqlUtils.js';
 
-export async function processHujiData(idCardFile, thread=200, startLine=600000, limit=100000) {
+export async function processHujiData(idCardFile, thread=100, startLine=0, limit=10000) {
     
-    for(let i=0; i<12; i++){
+    for(let i=0; i<1; i++){
         console.log("第" + i + "批任务");
-        await processHujiDataInner(idCardFile, thread=200, startLine=600000 + i*100000, limit=100000);
+        await processHujiDataInner(idCardFile, thread, startLine + i*limit, limit, i+1);
     }
 }
 
-export async function processHujiDataInner(idCardFile, thread=200, startLine=600000, limit=100000) {
+export async function processHujiDataInner(idCardFile, thread=1, startLine=0, limit=10, idx) {
     console.log("常驻人口查询！")
 
     // 1. 初始化数据库连接池
@@ -130,7 +130,7 @@ export async function processHujiDataInner(idCardFile, thread=200, startLine=600
 
     // 事件监听
     queue.on('active', () => {
-        console.log(`任务开始，队列大小: ${queue.size}`);
+        console.log(`第 ${idx} 批任务，队列大小: ${queue.size}`);
     });
     
     queue.on('completed', (result) => {
