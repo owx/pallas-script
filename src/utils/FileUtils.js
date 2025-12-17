@@ -42,7 +42,7 @@ export async function downloadFiles(urlsStr, prefix) {
 
 export async function downloadFile(url, dest) {
     const baseUrl = "https://chifeng-nx.njapld.com:7979";
-    if(url.indexOf("http:")!==0){
+    if(url.indexOf("http")!==0){
       url = baseUrl + url;
     }
 

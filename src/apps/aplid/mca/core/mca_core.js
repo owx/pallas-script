@@ -14,7 +14,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 街道申请，街道审批，县审批
 // 
 
-const authorization = 'Bearer 270f56ca-7b90-401c-87c0-063119a751a3';
+const authorization = 'Bearer 9fa8f560-6cbd-430a-85f1-7e3e74db02f8';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -538,7 +538,7 @@ export async function homebedGovCompleteList(size=1, year=2025){
  * flag：1 未分配，2 已分配
  * 
  */
-export async function homebedAllocList(size=1, flag=1, year=2025){
+export async function homebedAllocList(size=1, flag=1, year=2025, ahbx1503=undefined){
   let url = '/ylapi/ylpt/v24Allocate/institutionAllocateList';
 
   let params = {
@@ -546,6 +546,7 @@ export async function homebedAllocList(size=1, flag=1, year=2025){
     size: size,
     year: year,
     flag: flag,
+    ahbx1503: ahbx1503,
   }
 
   return request.post(url, null, {params: params});
@@ -584,5 +585,60 @@ export async function homebedAllocSubmit(homebedAllocParam){
   return request.post(url, homebedAllocParam);
 }
 
+
+/**
+ * 
+ * 家庭养老床位建设-验收机构变更-获取列表
+ * 
+ */
+export async function homeBedAcceptanceList(size=1, flag=2){
+  let url = '/ylapi/ylpt/v24Allocate/queryCivilAcceptanceList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: 2025,
+    flag: flag,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/**
+ * 
+ * 家庭养老床位建设-验收机构变更-获取验收机构列表
+ * 
+ */
+export async function queryHae1InfoList(areaCode=654002202000, ahbx1701=3){
+  let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
+
+  let params = {
+    ahbx1701: ahbx1701,
+    areaCode: areaCode,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/**
+ * 家庭养老床位建设-验收机构变更-更换验收机构
+ * @param {*} ahbx1601 服务对象的id？
+ * @param {*} ysAxbe0001 服务机构的id？
+ * @param {*} year 
+ * @returns 
+ */
+export async function replaceYSInstitutionAllocate(ahbx1601, ysAxbe0001, year=2025){
+  let url = '/ylapi/ylpt/v24Allocate/replaceYSInstitutionAllocate';
+
+  let params = {
+    ahbx1601: ahbx1601,
+    ysAxbe0001: ysAxbe0001,
+    year, year,
+  }
+
+  return request.post(url, null, {params: params});
+}
 
 /******以上********************************  家庭养老床位建设  ****************************************** */

@@ -4,11 +4,13 @@ let g_posture = "未知"
 let oldTime = new Date();
 export function handlerMessage (topic, message){
   // message 是 Buffer 类型，需要转换为字符串
+  console.log(message)
+  
   const hexString = message.toString('hex');
   // console.log(`MQTTX Message ${topic}: ${hexString}`)
 
   let dType=message[0];
-  let com=message[1];
+  let com=message[1];     //1 检测数据， 2 告警信息
   let length=message[2];
   // console.log("DType", dType)
   // console.log("Com", com)
@@ -26,33 +28,33 @@ export function handlerMessage (topic, message){
   const deviceSn = parseDeviceSn(hexString);
   // console.log("deviceSn", deviceSn)
 
-    if(1){
-    // if(deviceSn =="13300000341000000461"){
-    // if(deviceSn =="13300000341000000167"){
-    // if(deviceSn =="19900000131000000436"){
+  // if(1){
+  // if(deviceSn =="13300000341000000461"){
+  if(deviceSn =="13300000341000000167"){
+  // if(deviceSn =="19900000131000000436"){
 
     logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
     logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 
     logger.debug(`人数：` + peopleNum)
 
-    // console.log(`MQTTX Message ${topic}: ${hexString}`)
+    console.log(`MQTTX Message ${topic}: ${hexString}`)
     if(com==1){
-      logger.debug(`${topic}: ${hexString}`)
+      // logger.debug(`${topic}: ${hexString}`)
 
       let persons =  parsePeopleData(message, peopleNum);
       // logger.debug("persons", persons)
   
-      if(persons && persons.length>0 && g_posture!=persons[0].postureStr){
-        let newTime = new Date();
-        let lastTime = newTime - oldTime;
-        logger.warn("结束时间：" + formatDate(newTime)  + "   耗时：" + lastTime/1000 + "s");
-        oldTime = newTime;
+      // if(persons && persons.length>0 && g_posture!=persons[0].postureStr){
+      //   let newTime = new Date();
+      //   let lastTime = newTime - oldTime;
+      //   logger.warn("结束时间：" + formatDate(newTime)  + "   耗时：" + lastTime/1000 + "s");
+      //   oldTime = newTime;
   
-        console.log();
+      //   console.log();
   
-        g_posture=persons[0].postureStr;
-        logger.warn("新的姿势：" + g_posture + " , 开始时间:" + formatDate(oldTime) )
-      }
+      //   g_posture=persons[0].postureStr;
+      //   logger.warn("新的姿势：" + g_posture + " , 开始时间:" + formatDate(oldTime) )
+      // }
 
     }else{
       logger.error(`${topic}: ${hexString}`)
@@ -99,9 +101,16 @@ function parsePeopleData(data, peopleNum) {
   // 假设 data 是 Uint8Array 或 ArrayBuffer
   const view = new DataView(data.buffer || data);
 
-  const timestamp = view.getInt32(12, true);
+  // console.log(view)
+
+  const timestamp = view.getUint32(12, true);
+
+  console.log("timestamp:", timestamp)
+
   // 时间戳转Date对象
-  const date = new Date(timestamp);
+  const date = new Date(timestamp * 1000);
+
+
   // 获取各个时间部分
   const year = date.getFullYear();       // 年
   const month = date.getMonth() + 1;     // 月 (0-11，需要+1)
@@ -111,7 +120,7 @@ function parsePeopleData(data, peopleNum) {
   const seconds = date.getSeconds();     // 秒
 
   // 格式化输出
-  // logger.debug(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
+  logger.info(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
 
   
   for (let i = 0; i < peopleNum; i++) {

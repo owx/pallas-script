@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import { hbAutoSubmitApply } from './homebed/homebed_apply.js';
 import { hbJiedaoAutoAudit, hbQuxianAutoAudit } from './homebed/homebed_audit.js';
-import { hbAutoSubmitAlloc } from './homebed/homebed_alloc.js';
+import { hbAutoSubmitAlloc, hbAutoAllocByFile } from './homebed/homebed_alloc.js';
+
+import { hbAutoChangeOrg } from './homebed/homebed_change_org.js';
+
 
 import { jjAutoSubmitApply } from './jujia/jujia_apply.js';
 import { jjJiedaoAutoAudit, jjQuxianAutoAudit } from './jujia/jujia_audit.js';
@@ -25,6 +28,12 @@ export async function mcaMain(mode, size) {
             // （家床）提交初审？
             // hbAutoSubmitAlloc("邹元珍", 1);
 
+            // 
+            // hbAutoAllocByFile
+
+            // 验收机构变更
+            // hbAutoSubmitApply();
+
             break;
 
         case 'jujia':
@@ -46,7 +55,7 @@ export async function mcaMain(mode, size) {
             break;
 
         default:
-            jjAutoJujiaFeeHistoryExport(".", size);
+            hbAutoAllocByFile("alloc.txt");
             break;
     }
 
@@ -56,14 +65,16 @@ export async function mcaMain(mode, size) {
 
 /****************   需求记录
 
+2025/12/17 丁婷  更改验收机构 & 分配
+ylfw_654002_0001     Mzj8038@
+shfw654002000006     Yns@202510262
+
 2025/11/22
 shfw654023000001    Ylz@2025102810
 shfw654021000001    Ylz@2025102810
 
-
 2025/10/20 yinli  吉里于孜镇
 账号：jz2024  密码： LIUqin8@jz
-
 
 2025/10/11
 1、霍城县账密

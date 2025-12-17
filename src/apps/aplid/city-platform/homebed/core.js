@@ -4,11 +4,11 @@ import { axiosManager } from '#utils/AxiosManager.js';
 
 /*************************** 家庭床位建设 *********************************/
 
-const authorization = 'Bearer 065cfe2c-d1bb-4f93-a17b-b6a910d6a9fa';
+const authorization = 'Bearer 8e170b55-ea73-4b69-afa6-b3d293cc6d26';
 
 const request = axiosManager.createInstance("mca", {
-  baseURL: "https://chifeng-nx.njapld.com:7979",
-  // baseURL: "https://apld-v6.njapld.com:20001",
+  // baseURL: "https://chifeng-nx.njapld.com:7979",
+  baseURL: "https://apld-v6.njapld.com:20001",
   timeout: 5000,
   headers: {
     authorization: authorization,
@@ -22,7 +22,7 @@ const request = axiosManager.createInstance("mca", {
 
 /*************************** 2. 环境评估 *********************************/
 
-export async function fbEnvAssessmentPage(environmentEvaluationUnit, size=1, subprojectId='1960238435465662466', businessApprovalStatus=3) {
+export async function fbEnvAssessmentPage(environmentEvaluationUnit, subprojectId='1960238435465662466', size=1, businessApprovalStatus=3) {
   let url = '/management/fbEnvAssessment/page';
 
   let body ={

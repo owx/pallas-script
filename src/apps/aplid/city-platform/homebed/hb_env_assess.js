@@ -6,9 +6,9 @@ import { zipFolderWithAdm, downloadFiles } from '#src/utils/FileUtils.js';
 import { fbEnvAssessmentPage, fbEnvAssessmentOne } from './core.js';
 
 
-export async function processEnvAssessImages(environmentEvaluationUnit, limit=1) {
+export async function processEnvAssessImages(environmentEvaluationUnit, subprojectId="1954828803239837697", limit=1) {
 
-    let envAssessListResp = await fbEnvAssessmentPage(environmentEvaluationUnit, limit)
+    let envAssessListResp = await fbEnvAssessmentPage(environmentEvaluationUnit, subprojectId, limit)
     envAssessListResp = encryptUtil.aesDecrypt(envAssessListResp.data.encryption)
     envAssessListResp = JSON.parse(envAssessListResp);
     let envAssessList = envAssessListResp.data.records;
