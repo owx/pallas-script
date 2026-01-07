@@ -4,7 +4,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 
 /*************************** 家庭床位建设 *********************************/
 
-const authorization = 'Bearer 8e170b55-ea73-4b69-afa6-b3d293cc6d26';
+const authorization = 'Bearer 160b6e12-3a2c-48b6-be01-81fd46c4fddb';
 
 const request = axiosManager.createInstance("mca", {
   // baseURL: "https://chifeng-nx.njapld.com:7979",

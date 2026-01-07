@@ -38,11 +38,13 @@ program
   .description('宁享养老平台批量数据处理工具集')
   .option('-m, --mode <string>', '工作模式', 'default')
   .option('-s, --size <number>', '批量处理数量', '1')
+  .option('-f, --file <string>', '需要处理的文件')
+
   // .option('-o, --output <dir>', '输出目录', 'dist')
   // .option('--minify', '是否压缩')
   .action((options) => {
-    console.log(`运行NX工具(参数: mode=${options.mode}, size=${options.size})`);
-    nxMain(options.mode, options.size);
+    console.log(`运行NX工具(参数: mode=${options.mode}, size=${options.size}, file=${options.file})`);
+    nxMain(options.mode, options.size, options.file);
   });
 
 program

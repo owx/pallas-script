@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import axios from 'axios';
 import fs from 'fs';
+import path from 'path';
 import { encryptUtil } from '#utils/EncryptUtil.ts'
 import  { logger } from '#utils/logger.js';
 // import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
 
 
-let Authorization = 'Bearer 3f83ac62-eb73-49cf-9cdb-2b4a104a18ce';
+let Authorization = 'Bearer c2494966-2dbf-4a14-b50e-aaf540c36f1d';
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = Authorization;
   return config;
@@ -87,6 +88,7 @@ export async function batchQueryDeath(idCardFile, prefixName, startLine=0, threa
       let idCard =arr.trim();
       let name = prefixName + i;
 
+      
       //   logger.error(name + ',' +  idCard);
       queue.add(async () => {
         queryDeath(queue, name, idCard);
@@ -100,7 +102,8 @@ export async function batchQueryDeath(idCardFile, prefixName, startLine=0, threa
   
 /**
  * 宁享-批量查询多元死亡数据
- * 
+ * 通过宁享接口进行查询，输入文本文件，通过逗号分隔，首列是身份证id；
+ * 如果当前行包含有“成功”内容，则会跳过当前行，并且把当前行直接回写到结果文件中，主要是为了解决部分失败重新执行的方便
  * @param {*} idCardFile 
  * @param {*} prefixName 
  * @param {*} startLine 
@@ -115,8 +118,10 @@ export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, t
     //     }
     //   });
 
+    let parsed = path.parse(idCardFile);
+
     // 创建可写流
-    const fsws = fs.createWriteStream('dest.txt', {
+    const fsws = fs.createWriteStream(parsed.name + '_result.txt', {
       encoding: 'utf8',
       flags: 'w' // 'w' 写入, 'a' 追加
     });
@@ -145,10 +150,16 @@ export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, t
     let list = data.split('\n');
     let content = "";
     for(let i=startLine; i<list.length; i++){
-      let arr = list[i];
-      let idCard =arr.trim();
-      let name = prefixName + i;
+      let line = list[i];
 
+      if(line.indexOf("成功") > 0){
+        fsws.write(line + '\n');
+        continue;
+      }
+
+      let arr = line.split(",");
+      let idCard =arr[0].trim();
+      let name = prefixName + i;
       logger.error(name + ',' +  idCard);
       queue.add(async () => {
         let rowData = '';

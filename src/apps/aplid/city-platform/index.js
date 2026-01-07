@@ -9,7 +9,7 @@ export async function cpMain(mode, limit, output) {
         case 'a':
         case 'assess':
             //环境评估照片批量下载
-            processEnvAssessImages("八宇健康", "1954828803239837697", limit);
+            processEnvAssessImages("悦心", "1954828803239837697", limit);
             break;
 
         case 'i':

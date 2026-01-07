@@ -6,7 +6,7 @@ import { batchQueryDeathData, batchQueryDeath, processData} from './gongan/death
 import { processHujiData } from "./gongan/huji.js";
 import { test } from './gongan/index.js';
 
-export async function nxMain(mode, size) {
+export async function nxMain(mode, size, file="./oldman.txt") {
     switch(mode){
         case 'slowsql':
             // 慢SQL数据分析
@@ -15,7 +15,7 @@ export async function nxMain(mode, size) {
 
         case 'death':
             // 多元死亡数据查询
-            batchQueryDeathData('./oldman.txt', 'E', 0, 100);
+            batchQueryDeathData(file, 'A', 0, 100);
             // processData();
             break;
 

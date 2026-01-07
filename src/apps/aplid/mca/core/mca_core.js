@@ -14,11 +14,11 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 街道申请，街道审批，县审批
 // 
 
-const authorization = 'Bearer 9fa8f560-6cbd-430a-85f1-7e3e74db02f8';
+const authorization = 'Bearer 1459dc17-7cae-466c-86fa-447e1f5b739f';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
-  timeout: 5000,
+  timeout: 60000,
   headers: {
     authorization: authorization,
   }
@@ -325,6 +325,68 @@ export async function jujiaFeeHistoryExport(ahbx1501, year=2025){
   let params = {
     year: year,
     ahbx1501: ahbx1501,
+  }
+
+  return request.post(url, null, {params: params, responseType: 'stream'});
+}
+
+
+
+/**
+ * 居家养老上门服务-综合查询-列表
+ * 
+ * @param {*} size 
+ * @param {*} year 
+ * @param {*} queryInfo   不知道干啥的
+ * @returns 
+ */
+export async function jujiaVisitServiceQuery(size=1, current=1, year=2025, queryInfo=2){
+  let url = '/ylapi/ylpt/v24Visitingservice/homeVisitServiceQuery';
+
+  let params = {
+    current: current,
+    size: size,
+    queryInfo: queryInfo,
+    year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 居家养老上门服务-综合查询-服务历史
+ * 
+ * @param {*} ahbx1501 
+ * @param {*} size 
+ * @param {*} year 
+ * @returns 
+ */
+export async function jujiaServiceHistory(ahbx1501, size=1, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingservice/serviceHistory';
+
+  let params = {
+    current: 1,
+    size: size,
+    ahbx1501: ahbx1501,
+    year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 居家养老上门服务-综合查询-服务历史-导出
+ * @param {*} size  分页查询数量
+ * @param {*} ahbx1501
+ * @param {*} year  年份
+ * @returns 
+ */
+export async function jujiaServiceHistoryExport(ahbx1501, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingservice/serviceHistoryExport';
+
+  let params = {
+    ahbx1501: ahbx1501,
+    year: year,
   }
 
   return request.post(url, null, {params: params, responseType: 'stream'});
