@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { xboxMain } from './fe/index.js';
-import { qrMain } from './qrcode/index.js';
+// import { qrMain } from './qrcode/index.js';
 import { labMain } from './lab/index.js';
+import { pressureTest } from './pressure/index.js';
 
 const program = new Command();
 
@@ -22,15 +23,15 @@ program
     xboxMain(options.path, options.file);
   });
 
-program
-  .command('qr')
-  .description('QRCode工具')
-  .option('-p, --port <number>', '端口号', '3000')
-  .option('-h, --host <string>', '主机名', 'localhost')
-  .action((options) => {
-    console.log(`运行QRCode工具`);
-    qrMain();
-  });
+// program
+//   .command('qr')
+//   .description('QRCode工具')
+//   .option('-p, --port <number>', '端口号', '3000')
+//   .option('-h, --host <string>', '主机名', 'localhost')
+//   .action((options) => {
+//     console.log(`运行QRCode工具`);
+//     qrMain();
+//   });
 
 program
   .command('lab')
@@ -40,6 +41,15 @@ program
   .action((options) => {
     console.log(`运行Lab实验室工具`);
     labMain();
+  });
+
+program
+  .command('pre')
+  .description('pressure 压测工具')
+  .option('-o, --output <dir>', '输出目录', 'dist')
+  .option('--minify', '是否压缩')
+  .action((options) => {
+    pressureTest();
   });
 
 program

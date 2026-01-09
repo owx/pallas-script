@@ -62,7 +62,7 @@ export async function mcaMain(mode, size) {
             break;
 
         default:
-            jjAutoJujiaServiceHistoryExport(".", size, 6);
+            jjAutoSubmitApply(100, "南京爱普雷德电子科技有限公司");
             break;
     }
 

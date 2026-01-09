@@ -19,6 +19,7 @@ export async function cpMain(mode, limit, output) {
             break;
 
         default:
+            // requestTest();
             console.log("请指定运行方式！")
             break;
     }

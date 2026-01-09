@@ -8,7 +8,7 @@ import { jujiaServiceList } from './data/constants.js'
 /**
  * 主入口，自动化处理
  */
-export async function jjAutoSubmitApply(size=1){
+export async function jjAutoSubmitApply(size=1, dedicateOrgName){
 
   // 1. 获取当前项目信息（认定标准）
   let prjInfoResp = await queryPrjInfo()
@@ -35,13 +35,27 @@ export async function jjAutoSubmitApply(size=1){
   let orgListResp = await jujiaOrgList(areaCode)
   let orgList = orgListResp.data.data;
   // logger.info("获取服务组织信息:", orgList)
-  if((!orgList) || orgList.length>1 || orgList.length==0){
-    console.log("获取到的服务组织超过一个，需要先确定一下使用哪个！")
-    return;
-  }
-  let axbe0001 = orgList[0].axbe0001; //机构代号
-  let axbe0003 = orgList[0].axbe0003; //机构名称
 
+  let axbe0001 = undefined; //机构代号
+  let axbe0003 = undefined; //机构名称
+  if(dedicateOrgName){
+    let foundOrg = orgList.find((org)=>{
+      return org.axbe0003==dedicateOrgName;
+    })
+    if(foundOrg==null){
+      console.log("未找到匹配的服务机构");
+      return;
+    }
+    axbe0001 = foundOrg.axbe0001;
+    axbe0003 = foundOrg.axbe0003;
+  }else{
+    if((!orgList) || orgList.length>1 || orgList.length==0){
+      console.log("获取到的服务组织超过一个，需要先确定一下使用哪个！")
+      return;
+    }
+    axbe0001 = orgList[0].axbe0001;
+    axbe0003 = orgList[0].axbe0003;
+  }
 
   // 4. 生成服务项目列表
   let jjsm04DtoList = jujiaServiceList.map((item)=>{
