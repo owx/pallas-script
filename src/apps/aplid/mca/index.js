@@ -42,7 +42,7 @@ export async function mcaMain(mode, size) {
         case 'jujia':
 
             // 街道提交申请
-            // jjAutoSubmitApply(100);
+            // jjAutoSubmitApply(30, "南京爱普雷德电子科技有限公司");
 
             // 街道审核
             // jjJiedaoAutoAudit ("刘勤", 17);
@@ -62,7 +62,7 @@ export async function mcaMain(mode, size) {
             break;
 
         default:
-            jjAutoSubmitApply(100, "南京爱普雷德电子科技有限公司");
+            jjAutoJujiaFeeHistoryExport(".", size);
             break;
     }
 

@@ -3,8 +3,35 @@ import PQueue from 'p-queue';
 import  { logger } from '#utils/logger.js';
 import { uploadFile } from "./utils.js";
 import {
-  faceCompareOuter
+  faceCompareOuter,
+  lsCreateGovOrder,
+  lsCreateShequOrder,
 } from "./core.js";
+
+export async function preMain(){
+  lishuiTest();
+}
+
+
+/**
+ * 溧水5.1工单创建重复测试
+ */
+export async function lishuiTest(name, size=1, jobTitle="工作人员"){
+
+  const queue = new PQueue({
+    concurrency: 100,
+    // interval: 1000,
+    // intervalCap: 1,
+  });
+
+  for(let i=0; i<100; i++){
+    queue.add(async () => {
+      
+      let resp = await lsCreateGovOrder();
+      logger.info(i + ". result -> ", resp.data)
+    });
+  }
+}
 
 
 /**
@@ -51,3 +78,4 @@ export async function requestTest(name, size=1, jobTitle="工作人员"){
     
     })
 }
+

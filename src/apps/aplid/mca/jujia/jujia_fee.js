@@ -55,5 +55,12 @@ export async function jjAutoJujiaFeeHistoryExport(filePath=".", size=1){
 }
 
 
+//鲍菊珍
 
+// 652722196011200400
+//阿米娜·沙依提
+// 费用确认： 作废-》否
+// https://ylfw.mca.gov.cn/ylapi/ylpt/v24Visitingallocate/expenseVerify?jjsm0601=b10bb2257ea94229949d85b2ac435454&ahbx1501=c3a71ac35bc34f48850fb0ac2397be10&jjsm0603=95&jjsm0625=0&jjsm0609=50
+// jjsm0601=b10bb2257ea94229949d85b2ac435454&ahbx1501=c3a71ac35bc34f48850fb0ac2397be10&jjsm0603=95&jjsm0625=0&jjsm0609=50
 
+//https://ylfw.mca.gov.cn/ylapi/ylpt/v24Visitingallocate/expenseVerify?jjsm0601=570f855fd1414fce91bfa0ab39c3a0a4&ahbx1501=e34f2c7a204a49418ebc0b2a2aac37c5&jjsm0603=328&jjsm0625=1&jjsm0609=0&jjsm0626=%E8%B6%85%E6%97%B6

@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { xboxMain } from './fe/index.js';
 // import { qrMain } from './qrcode/index.js';
 import { labMain } from './lab/index.js';
-import { pressureTest } from './pressure/index.js';
+import { preMain } from './pressure/index.js';
 
 const program = new Command();
 
@@ -49,7 +49,7 @@ program
   .option('-o, --output <dir>', '输出目录', 'dist')
   .option('--minify', '是否压缩')
   .action((options) => {
-    pressureTest();
+    preMain();
   });
 
 program
