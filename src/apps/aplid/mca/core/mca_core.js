@@ -15,7 +15,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 
 
 
-const authorization = 'Bearer 2ab35052-2241-4b39-8fc2-ba2f30807d16';
+const authorization = 'Bearer 45f66122-215b-41b9-9467-9ae9fc6b6e21';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -279,14 +279,38 @@ export async function jujiaAllocList(flag, size=1, year=2025){
  * @param {*} year  年份
  * @returns 
  */
-export async function jujiaFeeConfirmList(flag, size=1, year=2025){
+export async function jujiaFeeConfirmList(flag, size=1, current=1, year=2025){
   let url = '/ylapi/ylpt/v24Visitingallocate/serviceChargeList';
 
   let params = {
-    current: 1,
+    current: current,
     size: size,
     year: year,
     flag: flag,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/**
+ * 居家养老上门服务-服务费用确认-未确认费用确认
+ * @param {*} jjsm0601 
+ * @param {*} ahbx1501 
+ * @param {*} jjsm0603 
+ * @param {*} jjsm0625 
+ * @param {*} jjsm0609 
+ * @returns 
+ */
+export async function jujiaFeeConfirm(jjsm0601, ahbx1501, jjsm0603, jjsm0625, jjsm0609){
+  let url = '/ylapi/ylpt/v24Visitingallocate/expenseVerify';
+
+  let params = {
+    jjsm0601: jjsm0601,
+    ahbx1501: ahbx1501,
+    jjsm0603: jjsm0603,
+    jjsm0625: jjsm0625,
+    jjsm0609: jjsm0609,
   }
 
   return request.post(url, null, {params: params});

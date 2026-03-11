@@ -9,7 +9,7 @@ import { hbAutoChangeOrg } from './homebed/homebed_change_org.js';
 import { jjAutoSubmitApply } from './jujia/jujia_apply.js';
 import { jjJiedaoAutoAudit, jjQuxianAutoAudit } from './jujia/jujia_audit.js';
 import { jjAutoAllocStatistic } from './jujia/jujia_alloc.js';
-import { jjAutoJujiaFeeHistoryExport } from './jujia/jujia_fee.js';
+import { jjAutoJujiaFeeHistoryExport, jjAutoJujiaFeeConfirm } from './jujia/jujia_fee.js';
 import { jjAutoJujiaServiceHistoryExport } from './jujia/jujia_history.js';
 
 
@@ -53,16 +53,18 @@ export async function mcaMain(mode, size) {
             // 统计数据
             //jjAutoAllocStatistic("d:\\temp\\新源.csv", 500);
 
+            // 居家服务历史导出
+            //jjAutoJujiaServiceHistoryExport();
+            
             // 居家费用历史导出
             // jjAutoJujiaFeeHistoryExport(".", size);
 
-            // 居家服务历史导出
-            //jjAutoJujiaServiceHistoryExport();
-
+            // 居家服务费用确认
+            // jjAutoJujiaFeeConfirm(size);
             break;
 
         default:
-            jjAutoJujiaFeeHistoryExport(".", size);
+            jjAutoJujiaFeeConfirm(size);
             break;
     }
 
@@ -71,6 +73,29 @@ export async function mcaMain(mode, size) {
 
 
 /****************   需求记录
+2026/03/05 尹梅 家床未确认费用确认
+shfw360428000001   6235030Yu@
+
+2026/03/03 陈明强 已确认费用
+伊宁市
+shfw654002000005
+Ylz@2025102811
+尼勒克
+shfw654028000001
+Ylz@2025102818
+巩留
+shfw654024000001
+Ylz@2025102813
+新源
+shfw654025000001
+Ylz@20251028
+霍城
+shfw654023000001
+Ylz@2025102811
+伊宁县
+shfw654021000001
+Ylz@20251028105
+
 
 2026/01/07 丁婷 jiangguimei9494 HZmzj@5696273
 1. 居家养老上门服务-综合查询-服务历史-导出

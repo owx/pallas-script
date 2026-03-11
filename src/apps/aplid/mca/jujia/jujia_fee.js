@@ -7,12 +7,61 @@ import { promisify } from 'util';
 
 import {
   jujiaFeeConfirmList,
+  jujiaFeeConfirm,
   jujiaFeeHistoryList,
   jujiaFeeHistoryExport
 } from "../core/mca_core.js";
 
-const streamPipeline = promisify(pipeline);
 
+/**
+ * 居家养老上门服务-服务费用确认-未确认费用确认
+ */
+export async function jjAutoJujiaFeeConfirm(size=1){
+  const current = 1;
+
+  // 1. 获取已确认费用列表 ， 1 是已确认
+  let confirmListResp = await jujiaFeeConfirmList(0, size, current);
+  let confirmList = confirmListResp.data.data.records;
+  logger.info("居家养老上门服务-服务费用确认-未确认列表: ", confirmList.length)
+
+  // logger.info("未确认列表: ", confirmList)
+
+  
+  // 3. 自动审核
+  const queue = new PQueue({ concurrency: 1 });
+  const targetDate = new Date('2026-03-01');
+
+  for(let i=0; i<confirmList.length; i++){
+    let ahbx1502 = confirmList[i].ahbx1502;
+    let jjsm0619 = confirmList[i].jjsm0619;
+
+    // 判断服务日期是否再要求时间之前
+    let serviceDate = new Date(jjsm0619);
+    let needConfirm = serviceDate < targetDate;
+    if(!needConfirm){
+      console.log(ahbx1502 + "->服务日期->" + jjsm0619 + " -> 暂不确认");
+      continue;
+    }
+
+    // 获取确认参数
+    let jjsm0601 = confirmList[i].jjsm0601;
+    let ahbx1501 = confirmList[i].ahbx1501;
+    let jjsm0603 = confirmList[i].jjsm0603;
+    let jjsm0625 = confirmList[i].jjsm0625;
+    let jjsm0609 = confirmList[i].jjsm0609;
+    
+    queue.add(async () => {
+      const response = await jujiaFeeConfirm(jjsm0601, ahbx1501, jjsm0603, jjsm0625, jjsm0609)
+      console.log(i + '->' + JSON.stringify(response.data) );
+    })
+  }
+}
+
+
+/**
+ * 居家养老上门服务-服务费用确认-历史费用导出
+ */
+const streamPipeline = promisify(pipeline);
 export async function jjAutoJujiaFeeHistoryExport(filePath=".", size=1){
 
   // 1. 获取已确认费用列表 ， 1 是已确认

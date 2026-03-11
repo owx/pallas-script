@@ -4,6 +4,7 @@ import { xboxMain } from './fe/index.js';
 // import { qrMain } from './qrcode/index.js';
 import { labMain } from './lab/index.js';
 import { preMain } from './pressure/index.js';
+import { utilsMain } from './utils/index.js';
 
 const program = new Command();
 
@@ -41,6 +42,18 @@ program
   .action((options) => {
     console.log(`运行Lab实验室工具`);
     labMain();
+  });
+
+program
+  .command('utils')
+  .description('实用工具集utils')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-s, --size <number>', '批量处理数量', '1')
+  .option('-i, --input <string>', '输入文件', '.')
+  .option('-o, --output <string>', '输出文件', '.')
+  .action((options) => {
+    console.log(`运行实用工具集(参数: mode=${options.mode}, size=${options.size}), input=${options.input}), output=${options.output})`);
+    utilsMain(options.mode, options.size, options.input, options.output);
   });
 
 program
