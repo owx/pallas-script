@@ -27,10 +27,13 @@ program
   .command('mca')
   .description('全国养老信息平台批量数据处理工具集')
   .option('-m, --mode <string>', '工作模式', 'default')
-  .option('-s, --size <number>', '批量处理数量', '1')
+  .option('-s, --size <number>', '分页大小', '1')
+  .option('-p, --page <number>', '当前页码', '1')
+  .option('-t, --total <number>', '数据总量', '1')
+  .option('-o, --output <dir>', '输出目录', '.')
   .action((options) => {
-    console.log(`运行MCA工具(参数: mode=${options.mode}, size=${options.size})`);
-    mcaMain(options.mode, options.size);
+    console.log(`运行MCA工具(参数: mode=${options.mode}, page=${options.page}, size=${options.size}, total=${options.total}, output=${options.output})`);
+    mcaMain(options.mode, options.page, options.size, options.total, options.output);
   });
 
 program

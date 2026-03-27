@@ -15,7 +15,7 @@ export async function utilsMain(mode, size, input, output){
             break;
 
         default:
-            convertSvgToPng(input, output, { width: 200, height: 200 });
+            // convertSvgToPng(input, output, { width: 200, height: 200 });
             break;
     }
 

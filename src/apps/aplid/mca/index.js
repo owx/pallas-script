@@ -2,19 +2,17 @@
 import { hbAutoSubmitApply } from './homebed/homebed_apply.js';
 import { hbJiedaoAutoAudit, hbQuxianAutoAudit } from './homebed/homebed_audit.js';
 import { hbAutoSubmitAlloc, hbAutoAllocByFile } from './homebed/homebed_alloc.js';
-
 import { hbAutoChangeOrg } from './homebed/homebed_change_org.js';
-
+import { hbAutoJiaChuangSatisfaction } from './homebed/homebed_query.js';
 
 import { jjAutoSubmitApply } from './jujia/jujia_apply.js';
 import { jjJiedaoAutoAudit, jjQuxianAutoAudit } from './jujia/jujia_audit.js';
 import { jjAutoAllocStatistic } from './jujia/jujia_alloc.js';
 import { jjAutoJujiaFeeHistoryExport, jjAutoJujiaFeeConfirm } from './jujia/jujia_fee.js';
-import { jjAutoJujiaServiceHistoryExport } from './jujia/jujia_history.js';
+import { jjAutoJujiaServiceHistoryExport } from './jujia/jujia_query.js';
 
 
-
-export async function mcaMain(mode, size) {
+export async function mcaMain(mode, page, size, total, output) {
 
     switch(mode){
         case 'homebed':
@@ -36,8 +34,14 @@ export async function mcaMain(mode, size) {
 
             // 验收机构变更
             // hbAutoSubmitApply();
-
             break;
+
+            
+        case 'Satisfaction':
+            // 家庭养老床位建设-综合查询-列表-详情-满意度
+            hbAutoJiaChuangSatisfaction()
+            break;
+
 
         case 'jujia':
 
@@ -53,18 +57,26 @@ export async function mcaMain(mode, size) {
             // 统计数据
             //jjAutoAllocStatistic("d:\\temp\\新源.csv", 500);
 
+        case 'ServiceHistory':
             // 居家服务历史导出
-            //jjAutoJujiaServiceHistoryExport();
-            
-            // 居家费用历史导出
-            // jjAutoJujiaFeeHistoryExport(".", size);
+            jjAutoJujiaServiceHistoryExport(output, size, page);
+            break;
 
+            
+        case 'FeeHistory':
+            // 居家费用历史导出
+            jjAutoJujiaFeeHistoryExport(output, size);
+            break;
+            
+        case 'FeeConfirm':
             // 居家服务费用确认
-            // jjAutoJujiaFeeConfirm(size);
+            let current=1;
+            jjAutoJujiaFeeConfirm(current, size, total);
+            // jjFeeAutoConfirmAll(4000);
             break;
 
         default:
-            jjAutoJujiaFeeConfirm(size);
+            // jjAutoJujiaFeeHistoryExport(".", size);
             break;
     }
 
@@ -73,6 +85,17 @@ export async function mcaMain(mode, size) {
 
 
 /****************   需求记录
+
+尹梅 3/27 居家历史导出&家床满意度
+ylfw_654000_0001 Ylzmzj@@3
+科室账号：ylfw_150400_0001   密码：+Cfsllgzk7133
+
+2026/03/19 尹梅 确认费用
+shfw360428000001   6235030Yu@ 
+
+2026/03/16 尹梅 导出已确认费用历史
+shfw654021000001 Ylz@20251028105
+
 2026/03/05 尹梅 家床未确认费用确认
 shfw360428000001   6235030Yu@
 

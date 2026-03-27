@@ -34,7 +34,11 @@ export async function jjAutoJujiaServiceHistoryExport(filePath=".", size=1, curr
 
   
   // 3. 自动审核
-  const queue = new PQueue({ concurrency: 1 });
+  const queue = new PQueue({
+    // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+    // interval: 1000,   // 时间窗口长度（毫秒）
+    concurrency: 1     // 并发数（可选，默认 Infinity）
+  });
 
   for(let i=0; i<feeList.length; i++){
     let ahbx1501 = feeList[i].ahbx1501;

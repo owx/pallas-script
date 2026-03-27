@@ -16,30 +16,83 @@ import {
 /**
  * 居家养老上门服务-服务费用确认-未确认费用确认
  */
-export async function jjAutoJujiaFeeConfirm(size=1){
-  const current = 1;
 
-  // 1. 获取已确认费用列表 ， 1 是已确认
-  let confirmListResp = await jujiaFeeConfirmList(0, size, current);
-  let confirmList = confirmListResp.data.data.records;
-  logger.info("居家养老上门服务-服务费用确认-未确认列表: ", confirmList.length)
+// export async function jjFeeAutoConfirmAll(size=1) {
+//   const queue = new PQueue({
+//     // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+//     // interval: 2000,   // 时间窗口长度（毫秒）
+//     concurrency: 1     // 并发数（可选，默认 Infinity）
+//   });
+//   logger.info("居家养老上门服务-服务费用确认-总数: ", size)
 
-  // logger.info("未确认列表: ", confirmList)
+//   let pageSize = 500;
+//   let currentPage = 1;
+//   let total = size/pageSize;
 
+//   for(let i=Math.ceil(total); i>0; i--){
+//     queue.add(async () => {
+//       console.log("task->" + i);
+//       await jjAutoJujiaFeeConfirm(i, pageSize)
+//     })
+//   }
+// }
+
+export async function jjAutoJujiaFeeConfirm(current=1, size=1, total=1){
   
-  // 3. 自动审核
-  const queue = new PQueue({ concurrency: 1 });
-  const targetDate = new Date('2026-03-01');
+  // 1. 获取已确认费用列表 ， 1 是已确认
+  let confirmList=[];
+  let totalPage=Math.ceil(total/size);
+  for(let i=current; i<=totalPage; i++){
+    let confirmListResp = await jujiaFeeConfirmList(0, size, i);
+    let list = confirmListResp.data.data?.records;
+    
+    if(list==null){
+      logger.info(`居家养老上门服务-服务费用确认-当前页面码：${totalPage} / ${i}, 分页大小：${size} -> 数据异常退出`)
+      return;
+    }else{
+      logger.info(`居家养老上门服务-服务费用确认-当前页面码：${totalPage} / ${i}, 分页大小：${size}, 实际数量: ${list.length}`)
+    }
+    confirmList.push(...list);
+  }
+
+  await jjAutoConfirm(confirmList);
+}
+
+
+/**
+ * 居家养老上门服务-服务费用确认-确认费用
+ * @param {*} confirmList 
+ */
+async function jjAutoConfirm(confirmList=[]){
+
+  // 1. 已确认费用列表
+  logger.info("已确认列表: ", confirmList)
+
+  // 3. 自动确认
+  const queue = new PQueue({ 
+    // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+    // interval: 1000,   // 时间窗口长度（毫秒）
+    concurrency: 1     // 并发数（可选，默认 Infinity）
+  });
+  const targetDate = new Date('2026-03-27');
 
   for(let i=0; i<confirmList.length; i++){
-    let ahbx1502 = confirmList[i].ahbx1502;
-    let jjsm0619 = confirmList[i].jjsm0619;
+    let ahbx1502 = confirmList[i].ahbx1502;           // 服务对象姓名
 
     // 判断服务日期是否再要求时间之前
+    let jjsm0619 = confirmList[i].jjsm0619;           // 服务日期
     let serviceDate = new Date(jjsm0619);
     let needConfirm = serviceDate < targetDate;
     if(!needConfirm){
       console.log(ahbx1502 + "->服务日期->" + jjsm0619 + " -> 暂不确认");
+      continue;
+    }
+
+    // 服务员黑名单
+    let ahdx6124Name = confirmList[i].ahdx6124Name;   // 服务员姓名
+    const blackNameList = ["慕利敏", "哈夫再", "王保从", "来孜娜·依布拉音", "尼汗热衣·艾尼瓦尔"];
+    if( blackNameList.includes(ahdx6124Name)){
+      console.log(ahbx1502 + "->服务黑名单->" + ahdx6124Name + " -> 暂不确认");
       continue;
     }
 
@@ -51,6 +104,7 @@ export async function jjAutoJujiaFeeConfirm(size=1){
     let jjsm0609 = confirmList[i].jjsm0609;
     
     queue.add(async () => {
+      // console.log(ahbx1502 + "->服务日期->" + jjsm0619 + " -> 正在确认");
       const response = await jujiaFeeConfirm(jjsm0601, ahbx1501, jjsm0603, jjsm0625, jjsm0609)
       console.log(i + '->' + JSON.stringify(response.data) );
     })

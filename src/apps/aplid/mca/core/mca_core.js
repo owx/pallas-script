@@ -15,7 +15,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 
 
 
-const authorization = 'Bearer 45f66122-215b-41b9-9467-9ae9fc6b6e21';
+const authorization = 'Bearer 9fe2b013-3a9b-42cc-b729-913e65fc4c9c';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -26,8 +26,344 @@ const request = axiosManager.createInstance("mca", {
 })
 
 
-/*****************************************  通用接口  ****************************************** */
 
+
+/********以下*********************************  家庭养老床位建设  ****************************************** */
+
+/**
+ * 
+ * 家庭养老床位建设-根据行政区划code查询服务机构信息
+ * 
+ * ahbx1701   1 评估设计机构， 2 服务机构， 3 验收机构
+ * 
+ * 例如 areaCode='360428100000' ， 地区code不一样，数据可能不同，千万别错！
+ * 
+ */
+export async function homeBedOrgList(areaCode, ahbx1701){
+  let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
+
+  let params = {
+    ahbx1701: ahbx1701,
+    areaCode: areaCode,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-申请-获取列表
+ * 
+ */
+export async function homeBedApplyList(size=1){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildFillApplyList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: 2025,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-申请-详情
+ * 
+ */
+export async function homeBedApplyDetail(ahbx1501='bd96bb077d3a4da6a5d47a6489c4e4ed', ahbx1601='9090ED612FD64169B2939A74B4392349'){
+  let url = '/ylapi/ylpt/v24ConstructionBed/details';
+
+  let params = {
+    ahbx1501: ahbx1501,
+    ahbx1601: ahbx1601,
+  }
+
+  return request.get(url, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-申请-暂存申请
+ * 
+ */
+export async function homeBedApplySave(homeBedApplyParam){
+  let url = '/ylapi/ylpt/v25ConstructionBed/v25bedBuildApplyTemp';
+
+  return request.post(url, homeBedApplyParam);
+}
+
+/**
+ * 
+ * 家庭养老床位建设-申请-提交申请
+ * 
+ */
+export async function homeBedApplySubmit(homeBedApplyParam){
+  let url = '/ylapi/ylpt/v25ConstructionBed/v25bedBuildApply';
+
+  // let homeBedApplyParam = {
+  //   ahbx1601: ahbx1601,
+  //   hbx15Dto: hbx15Dto,
+  //   ssAxbe0001: axbe0001,
+  // }
+
+  return request.post(url, homeBedApplyParam);
+}
+
+/**
+ * 
+ * 家庭养老床位建设-初步审核-获取审核列表
+ * 
+ */
+export async function homeBedAuditList(size=1){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildFillInitAuditList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: 2025,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-初步审核-审核申请
+ * 
+ */
+export async function homeBedAuditApprove(homebedApproveParam){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildInitAudit';
+
+  // let approveParam = {
+  //   ahbx1601: auditDetail.ahbx1601,
+  //   cauditInfo: {
+  //     ahbx1402: ahbx1402,
+  //     ahbx1411: ahbx1411,
+  //     ahbx1603: 1,
+  //     ahbx1602: name,
+  //     ahbx1605: jobTitle,
+  //     ahbx1604: ""
+  //   }
+  // }
+
+  return request.post(url, homebedApproveParam);
+}
+
+/**
+ * 
+ * 家庭养老床位建设-审核-列表-【区县账号】
+ * 
+ */
+export async function homebedGovAuditList(size=1){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyTodoAuditList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: 2025,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-审核-【区县账号】
+ * 
+ */
+export async function homebedGovAuditApprove(homebedApproveParam){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyAudit';
+
+  // let homebedApproveParam = {
+  //   ahbx1601: auditDetail.ahbx1601,
+  //   year:  "2025",
+  //   pgAxbe0001: pgAxbe0001,
+  //   ysAxbe0001: ysAxbe0001,
+  //   zauditInfo: {
+  //     pgAxbe0001: pgAxbe0001,
+  //     ysAxbe0001: ysAxbe0001,
+  //     ahbx1402: ahbx1402,
+  //     ahbx1411: ahbx1411,
+  //     ahbx1607: 1,              // 审核状态， 0 不通过， 1 通过
+  //     ahbx1606: name,
+  //     ahbx1609: jobTitle,
+  //     ahbx1608: ""
+  //   }
+  // }
+             
+  return request.post(url, homebedApproveParam);
+}
+
+/**
+ * 
+ * 家庭养老床位建设-完成-列表-【区县账号】
+ * 
+ */
+export async function homebedGovCompleteList(size=1, year=2025){
+  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyCompleteAuditList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/**
+ * 
+ * 家庭养老床位建设-服务人员分派-获取待分派列表
+ * flag：1 未分配，2 已分配
+ * 
+ */
+export async function homebedAllocList(size=1, flag=1, year=2025, ahbx1503=undefined){
+  let url = '/ylapi/ylpt/v24Allocate/institutionAllocateList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: year,
+    flag: flag,
+    ahbx1503: ahbx1503,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-服务人员分派-查询员工列表
+ * 
+ */
+export async function homebedEmployeeList(){
+  let url = '/ylapi/ylptjg/employee/queryEmployeeListByAxbe0001';
+
+  return request.post(url);
+}
+
+/**
+ * 
+ * 家庭养老床位建设-服务人员分派-分配服务人员
+ * 
+ */
+export async function homebedAllocSubmit(homebedAllocParam){
+
+  let url = '/ylapi/ylpt/v24Allocate/institutionAllocate';
+
+  // let homebedAllocParam = {
+  //   ahbx1601: ahbx1601,
+  //   ahbx1701: ahbx1701,
+  //   ahdx6124: ahdx6124,
+  //   axbe0001: axbe0001,
+  //   year: year
+  // }
+
+  return request.post(url, homebedAllocParam);
+}
+
+/**
+ * 
+ * 家庭养老床位建设-验收机构变更-获取列表
+ * 
+ */
+export async function homeBedAcceptanceList(size=1, flag=2){
+  let url = '/ylapi/ylpt/v24Allocate/queryCivilAcceptanceList';
+
+  let params = {
+    current: 1,
+    size: size,
+    year: 2025,
+    flag: flag,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 
+ * 家庭养老床位建设-验收机构变更-获取验收机构列表
+ * 
+ */
+export async function queryHae1InfoList(areaCode=654002202000, ahbx1701=3){
+  let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
+
+  let params = {
+    ahbx1701: ahbx1701,
+    areaCode: areaCode,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 家庭养老床位建设-验收机构变更-更换验收机构
+ * @param {*} ahbx1601 服务对象的id？
+ * @param {*} ysAxbe0001 服务机构的id？
+ * @param {*} year 
+ * @returns 
+ */
+export async function replaceYSInstitutionAllocate(ahbx1601, ysAxbe0001, year=2025){
+  let url = '/ylapi/ylpt/v24Allocate/replaceYSInstitutionAllocate';
+
+  let params = {
+    ahbx1601: ahbx1601,
+    ysAxbe0001: ysAxbe0001,
+    year, year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 家庭养老床位建设-综合查询-列表
+ * 
+ * @param {*} size 
+ * @param {*} current 
+ * @param {*} year 
+ * @param {*} queryInfo 不知道干啥的
+ * @returns 
+ */
+export async function hbIntegratedQuery(size=1, current=1, year=2025, queryInfo=2){
+  let url = '/ylapi/ylpt/v24ConstructionBed/integratedQuery';
+
+  let params = {
+    current: current,
+    size: size,
+    queryInfo: queryInfo,
+    year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 家庭养老床位建设-综合查询-列表-详情
+ * 
+ * @param {*} ahbx1501 
+ * @param {*} ahbx1601 
+ * @returns 
+ */
+export async function hbIntegratedQueryDetails(ahbx1501, ahbx1601){
+  let url = '/ylapi/ylpt/v24ConstructionBed/integratedQueryDetails';
+
+  let params = {
+    ahbx1501: ahbx1501,
+    ahbx1601: ahbx1601,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/******以上********************************  家庭养老床位建设  ****************************************** */
+
+
+
+/*****************************************  通用接口  ****************************************** */
 
 /**
  * 
@@ -355,14 +691,13 @@ export async function jujiaFeeHistoryExport(ahbx1501, year=2025){
   return request.post(url, null, {params: params, responseType: 'stream'});
 }
 
-
-
 /**
  * 居家养老上门服务-综合查询-列表
  * 
  * @param {*} size 
+ * @param {*} current 
  * @param {*} year 
- * @param {*} queryInfo   不知道干啥的
+ * @param {*} queryInfo 不知道干啥的
  * @returns 
  */
 export async function jujiaVisitServiceQuery(size=1, current=1, year=2025, queryInfo=2){
@@ -417,315 +752,5 @@ export async function jujiaServiceHistoryExport(ahbx1501, year=2025){
   return request.post(url, null, {params: params, responseType: 'stream'});
 }
 
-
-
 /*******以上**********************************  居家养老上门服务  ****************************************** */
 
-
-
-/********以下*********************************  家庭养老床位建设  ****************************************** */
-
-
-/**
- * 
- * 家庭养老床位建设-根据行政区划code查询服务机构信息
- * 
- * ahbx1701   1 评估设计机构， 2 服务机构， 3 验收机构
- * 
- * 例如 areaCode='360428100000' ， 地区code不一样，数据可能不同，千万别错！
- * 
- */
-export async function homeBedOrgList(areaCode, ahbx1701){
-  let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
-
-  let params = {
-    ahbx1701: ahbx1701,
-    areaCode: areaCode,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 
- * 家庭养老床位建设-申请-获取列表
- * 
- */
-export async function homeBedApplyList(size=1){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildFillApplyList';
-
-  let params = {
-    current: 1,
-    size: size,
-    year: 2025,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-/**
- * 
- * 家庭养老床位建设-申请-详情
- * 
- */
-export async function homeBedApplyDetail(ahbx1501='bd96bb077d3a4da6a5d47a6489c4e4ed', ahbx1601='9090ED612FD64169B2939A74B4392349'){
-  let url = '/ylapi/ylpt/v24ConstructionBed/details';
-
-  let params = {
-    ahbx1501: ahbx1501,
-    ahbx1601: ahbx1601,
-  }
-
-  return request.get(url, {params: params});
-}
-
-
-/**
- * 
- * 家庭养老床位建设-申请-暂存申请
- * 
- */
-export async function homeBedApplySave(homeBedApplyParam){
-  let url = '/ylapi/ylpt/v25ConstructionBed/v25bedBuildApplyTemp';
-
-  return request.post(url, homeBedApplyParam);
-}
-
-
-/**
- * 
- * 家庭养老床位建设-申请-提交申请
- * 
- */
-export async function homeBedApplySubmit(homeBedApplyParam){
-  let url = '/ylapi/ylpt/v25ConstructionBed/v25bedBuildApply';
-
-  // let homeBedApplyParam = {
-  //   ahbx1601: ahbx1601,
-  //   hbx15Dto: hbx15Dto,
-  //   ssAxbe0001: axbe0001,
-  // }
-
-  return request.post(url, homeBedApplyParam);
-}
-
-
-/**
- * 
- * 家庭养老床位建设-初步审核-获取审核列表
- * 
- */
-export async function homeBedAuditList(size=1){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildFillInitAuditList';
-
-  let params = {
-    current: 1,
-    size: size,
-    year: 2025,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 
- * 家庭养老床位建设-初步审核-审核申请
- * 
- */
-export async function homeBedAuditApprove(homebedApproveParam){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildInitAudit';
-
-  // let approveParam = {
-  //   ahbx1601: auditDetail.ahbx1601,
-  //   cauditInfo: {
-  //     ahbx1402: ahbx1402,
-  //     ahbx1411: ahbx1411,
-  //     ahbx1603: 1,
-  //     ahbx1602: name,
-  //     ahbx1605: jobTitle,
-  //     ahbx1604: ""
-  //   }
-  // }
-
-  return request.post(url, homebedApproveParam);
-}
-
-
-/**
- * 
- * 家庭养老床位建设-审核-列表-【区县账号】
- * 
- */
-export async function homebedGovAuditList(size=1){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyTodoAuditList';
-
-  let params = {
-    current: 1,
-    size: size,
-    year: 2025,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 
- * 家庭养老床位建设-审核-【区县账号】
- * 
- */
-export async function homebedGovAuditApprove(homebedApproveParam){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyAudit';
-
-  // let homebedApproveParam = {
-  //   ahbx1601: auditDetail.ahbx1601,
-  //   year:  "2025",
-  //   pgAxbe0001: pgAxbe0001,
-  //   ysAxbe0001: ysAxbe0001,
-  //   zauditInfo: {
-  //     pgAxbe0001: pgAxbe0001,
-  //     ysAxbe0001: ysAxbe0001,
-  //     ahbx1402: ahbx1402,
-  //     ahbx1411: ahbx1411,
-  //     ahbx1607: 1,              // 审核状态， 0 不通过， 1 通过
-  //     ahbx1606: name,
-  //     ahbx1609: jobTitle,
-  //     ahbx1608: ""
-  //   }
-  // }
-             
-  return request.post(url, homebedApproveParam);
-}
-
-
-/**
- * 
- * 家庭养老床位建设-完成-列表-【区县账号】
- * 
- */
-export async function homebedGovCompleteList(size=1, year=2025){
-  let url = '/ylapi/ylpt/v24ConstructionBed/bedBuildCountyCompleteAuditList';
-
-  let params = {
-    current: 1,
-    size: size,
-    year: year,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-
-/**
- * 
- * 家庭养老床位建设-服务人员分派-获取待分派列表
- * flag：1 未分配，2 已分配
- * 
- */
-export async function homebedAllocList(size=1, flag=1, year=2025, ahbx1503=undefined){
-  let url = '/ylapi/ylpt/v24Allocate/institutionAllocateList';
-
-  let params = {
-    current: 1,
-    size: size,
-    year: year,
-    flag: flag,
-    ahbx1503: ahbx1503,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 
- * 家庭养老床位建设-服务人员分派-查询员工列表
- * 
- */
-export async function homebedEmployeeList(){
-  let url = '/ylapi/ylptjg/employee/queryEmployeeListByAxbe0001';
-
-  return request.post(url);
-}
-
-
-/**
- * 
- * 家庭养老床位建设-服务人员分派-分配服务人员
- * 
- */
-export async function homebedAllocSubmit(homebedAllocParam){
-
-  let url = '/ylapi/ylpt/v24Allocate/institutionAllocate';
-
-  // let homebedAllocParam = {
-  //   ahbx1601: ahbx1601,
-  //   ahbx1701: ahbx1701,
-  //   ahdx6124: ahdx6124,
-  //   axbe0001: axbe0001,
-  //   year: year
-  // }
-
-  return request.post(url, homebedAllocParam);
-}
-
-
-/**
- * 
- * 家庭养老床位建设-验收机构变更-获取列表
- * 
- */
-export async function homeBedAcceptanceList(size=1, flag=2){
-  let url = '/ylapi/ylpt/v24Allocate/queryCivilAcceptanceList';
-
-  let params = {
-    current: 1,
-    size: size,
-    year: 2025,
-    flag: flag,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 
- * 家庭养老床位建设-验收机构变更-获取验收机构列表
- * 
- */
-export async function queryHae1InfoList(areaCode=654002202000, ahbx1701=3){
-  let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
-
-  let params = {
-    ahbx1701: ahbx1701,
-    areaCode: areaCode,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 家庭养老床位建设-验收机构变更-更换验收机构
- * @param {*} ahbx1601 服务对象的id？
- * @param {*} ysAxbe0001 服务机构的id？
- * @param {*} year 
- * @returns 
- */
-export async function replaceYSInstitutionAllocate(ahbx1601, ysAxbe0001, year=2025){
-  let url = '/ylapi/ylpt/v24Allocate/replaceYSInstitutionAllocate';
-
-  let params = {
-    ahbx1601: ahbx1601,
-    ysAxbe0001: ysAxbe0001,
-    year, year,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-/******以上********************************  家庭养老床位建设  ****************************************** */

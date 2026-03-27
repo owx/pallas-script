@@ -8,7 +8,7 @@ import  { logger } from '#utils/logger.js';
 import PQueue from 'p-queue';
 
 
-let Authorization = 'Bearer 3b660734-cf9e-4954-84b3-2da995197f45';
+let Authorization = 'Bearer e278fa4a-0312-490a-873f-d25ce21d4f44';
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = Authorization;
   return config;

@@ -52,7 +52,7 @@ program
   .option('-i, --input <string>', '输入文件', '.')
   .option('-o, --output <string>', '输出文件', '.')
   .action((options) => {
-    console.log(`运行实用工具集(参数: mode=${options.mode}, size=${options.size}), input=${options.input}), output=${options.output})`);
+    console.log(`运行实用工具集(参数: mode=${options.mode}, size=${options.size}, input=${options.input}, output=${options.output})`);
     utilsMain(options.mode, options.size, options.input, options.output);
   });
 
