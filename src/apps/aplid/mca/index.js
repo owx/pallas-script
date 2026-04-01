@@ -57,30 +57,35 @@ export async function mcaMain(mode, page, size, total, file, output) {
             // 统计数据
             //jjAutoAllocStatistic("d:\\temp\\新源.csv", 500);
 
-        case 'ServiceHistory':
+        case 'ServiceHistoryExport':
             // 居家服务历史导出
             jjAutoJujiaServiceHistoryExport(output, size, page);
             break;
 
-        case 'ServiceQrCode':
+        case 'ServiceQrCodeExport':
             // 居家-服务二维码导出
             jjServiceQrCodeExport(output, size, page, file);
             break;
             
-        case 'FeeHistory':
-            // 居家费用历史导出
+        case 'FeeHistoryExport':
+            // 居家-服务费用确认-已经确认历史费用导出
             jjAutoJujiaFeeHistoryExport(output, size);
             break;
             
         case 'FeeConfirm':
-            // 居家服务费用确认
+            // 居家-服务费用确认
             let current=1;
             jjAutoJujiaFeeConfirm(current, size, total);
             // jjFeeAutoConfirmAll(4000);
             break;
 
         default:
-            // jjAutoJujiaFeeHistoryExport(".", size);
+            console.log("ap mca -m(mode)")
+            console.log("\t-m FeeConfirm : 居家-服务费用确认")
+            console.log("\t-m FeeHistoryExport : 居家-服务费用确认-已经确认历史费用导出")
+            console.log("\t-m ServiceQrCodeExport : 居家-服务二维码导出")
+            console.log("\t-m ServiceHistoryExport : 居家服务历史导出")
+
             break;
     }
 

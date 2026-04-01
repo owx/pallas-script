@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { xboxMain } from './fe/index.js';
-// import { qrMain } from './qrcode/index.js';
 import { labMain } from './lab/index.js';
-import { preMain } from './pressure/index.js';
+import { qaMain } from './quality/index.js';
 import { utilsMain } from './utils/index.js';
 
 const program = new Command();
@@ -13,16 +11,51 @@ program
   .description('XBox Development Support CLI Tools')
   .version('1.0.0');
 
+
 program
-  .command('fe')
-  .description('FE前端打包工具')
-  .option('-p, --path <dir>', 'OSS路径', '/')
-  .option('-f, --file <dir>', '需要上传的文件')
-  // .option('--minify', '是否压缩')
+  .command('lab')
+  .description('Lab实验室工具')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  // .option('-p, --port <number>', '端口号', '3000')
+  // .option('-h, --host <string>', '主机名', 'localhost')
   .action((options) => {
-    console.log(`运行Xbox前端打包工具(参数: path=${options.path}, file=${options.file})`);
-    xboxMain(options.path, options.file);
+    console.log(`运行Lab实验室工具(参数: mode=${options.mode})`);
+    labMain(options.mode);
   });
+
+program
+  .command('qa')
+  .description('Quality质量工具')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-p, --port <number>', '端口号', '3000')
+  .option('-h, --host <string>', '主机名', 'localhost')
+  .action((options) => {
+    console.log(`运行Quality质量工具(参数: mode=${options.mode}, size=${options.size}, input=${options.input}, output=${options.output})`);
+    qaMain(options.mode, options.size, options.input, options.output);
+  });
+
+program
+  .command('utils')
+  .description('实用工具集utils')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-s, --size <number>', '批量处理数量', '1')
+  .option('-i, --input <string>', '输入文件', '.')
+  .option('-o, --output <string>', '输出文件', '.')
+  .action((options) => {
+    console.log(`运行utils实用工具集(参数: mode=${options.mode}, size=${options.size}, input=${options.input}, output=${options.output})`);
+    utilsMain(options.mode, options.size, options.input, options.output);
+  });
+
+// program
+//   .command('fe')
+//   .description('FE前端打包工具')
+//   .option('-p, --path <dir>', 'OSS路径', '/')
+//   .option('-f, --file <dir>', '需要上传的文件')
+//   // .option('--minify', '是否压缩')
+//   .action((options) => {
+//     console.log(`运行Xbox前端打包工具(参数: path=${options.path}, file=${options.file})`);
+//     xboxMain(options.path, options.file);
+//   });
 
 // program
 //   .command('qr')
@@ -34,48 +67,17 @@ program
 //     qrMain();
 //   });
 
-program
-  .command('lab')
-  .description('Lab实验室工具')
-  .option('-p, --port <number>', '端口号', '3000')
-  .option('-h, --host <string>', '主机名', 'localhost')
-  .action((options) => {
-    console.log(`运行Lab实验室工具`);
-    labMain();
-  });
-
-program
-  .command('utils')
-  .description('实用工具集utils')
-  .option('-m, --mode <string>', '工作模式', 'default')
-  .option('-s, --size <number>', '批量处理数量', '1')
-  .option('-i, --input <string>', '输入文件', '.')
-  .option('-o, --output <string>', '输出文件', '.')
-  .action((options) => {
-    console.log(`运行实用工具集(参数: mode=${options.mode}, size=${options.size}, input=${options.input}, output=${options.output})`);
-    utilsMain(options.mode, options.size, options.input, options.output);
-  });
-
-program
-  .command('pre')
-  .description('pressure 压测工具')
-  .option('-o, --output <dir>', '输出目录', 'dist')
-  .option('--minify', '是否压缩')
-  .action((options) => {
-    preMain();
-  });
-
-program
-  .command('build')
-  .description('构建项目')
-  .option('-o, --output <dir>', '输出目录', 'dist')
-  .option('--minify', '是否压缩')
-  .action((options) => {
-    console.log(`构建到目录: ${options.output}`);
-    if (options.minify) {
-      console.log('启用压缩');
-    }
-    // 执行构建逻辑
-  });
+// program
+//   .command('build')
+//   .description('构建项目')
+//   .option('-o, --output <dir>', '输出目录', 'dist')
+//   .option('--minify', '是否压缩')
+//   .action((options) => {
+//     console.log(`构建到目录: ${options.output}`);
+//     if (options.minify) {
+//       console.log('启用压缩');
+//     }
+//     // 执行构建逻辑
+//   });
 
 program.parse();

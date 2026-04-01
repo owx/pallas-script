@@ -12,6 +12,13 @@ import {
   jujiaFeeHistoryExport
 } from "../core/mca_core.js";
 
+// 创建任务队列
+const queue = new PQueue({ 
+  intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+  interval: 2000,   // 时间窗口长度（毫秒）
+  concurrency: 1     // 并发数（可选，默认 Infinity）
+});
+
 
 /**
  * 居家养老上门服务-服务费用确认-未确认费用确认
@@ -68,12 +75,6 @@ async function jjAutoConfirm(confirmList=[]){
   // 1. 已确认费用列表
   logger.info("已确认列表: ", confirmList)
 
-  // 3. 自动确认
-  const queue = new PQueue({ 
-    // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
-    // interval: 1000,   // 时间窗口长度（毫秒）
-    concurrency: 1     // 并发数（可选，默认 Infinity）
-  });
   const targetDate = new Date('2026-04-01');
 
   for(let i=0; i<confirmList.length; i++){
@@ -123,10 +124,6 @@ export async function jjAutoJujiaFeeHistoryExport(filePath=".", size=1){
   let feeList = feeListResp.data.data.records;
   
   logger.info("居家上门-服务费用确认-已确认列表: ", feeList.length)
-
-  
-  // 3. 自动审核
-  const queue = new PQueue({ concurrency: 1 });
 
   for(let i=0; i<feeList.length; i++){
     let ahbx1501 = feeList[i].ahbx1501;

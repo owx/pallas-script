@@ -2,7 +2,7 @@
 import { generateImageWithQRCodeAndText } from './core.js';
 import { logger } from '#utils/logger.js';
 
-export function app_start() {
+export function qrcodeApp() {
 
   // 使用示例
   const qrText = 'https://www.example.com';
