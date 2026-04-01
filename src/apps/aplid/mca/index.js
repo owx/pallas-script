@@ -9,10 +9,10 @@ import { jjAutoSubmitApply } from './jujia/jujia_apply.js';
 import { jjJiedaoAutoAudit, jjQuxianAutoAudit } from './jujia/jujia_audit.js';
 import { jjAutoAllocStatistic } from './jujia/jujia_alloc.js';
 import { jjAutoJujiaFeeHistoryExport, jjAutoJujiaFeeConfirm } from './jujia/jujia_fee.js';
-import { jjAutoJujiaServiceHistoryExport } from './jujia/jujia_query.js';
+import { jjAutoJujiaServiceHistoryExport, jjServiceQrCodeExport } from './jujia/jujia_query.js';
 
 
-export async function mcaMain(mode, page, size, total, output) {
+export async function mcaMain(mode, page, size, total, file, output) {
 
     switch(mode){
         case 'homebed':
@@ -62,6 +62,10 @@ export async function mcaMain(mode, page, size, total, output) {
             jjAutoJujiaServiceHistoryExport(output, size, page);
             break;
 
+        case 'ServiceQrCode':
+            // 居家-服务二维码导出
+            jjServiceQrCodeExport(output, size, page, file);
+            break;
             
         case 'FeeHistory':
             // 居家费用历史导出
@@ -89,6 +93,8 @@ export async function mcaMain(mode, page, size, total, output) {
 尹梅 3/27 居家历史导出&家床满意度
 ylfw_654000_0001 Ylzmzj@@3
 科室账号：ylfw_150400_0001   密码：+Cfsllgzk7133
+贺州  金民工程密码更新：账号jiangguimei9494，密码：HZsmzj@5696273
+玉林   金民账号   yinye137       密码    Aa2680723！
 
 2026/03/19 尹梅 确认费用
 shfw360428000001   6235030Yu@ 

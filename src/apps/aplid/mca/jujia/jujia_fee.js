@@ -74,7 +74,7 @@ async function jjAutoConfirm(confirmList=[]){
     // interval: 1000,   // 时间窗口长度（毫秒）
     concurrency: 1     // 并发数（可选，默认 Infinity）
   });
-  const targetDate = new Date('2026-03-27');
+  const targetDate = new Date('2026-04-01');
 
   for(let i=0; i<confirmList.length; i++){
     let ahbx1502 = confirmList[i].ahbx1502;           // 服务对象姓名

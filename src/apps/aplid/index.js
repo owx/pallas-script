@@ -30,10 +30,11 @@ program
   .option('-s, --size <number>', '分页大小', '1')
   .option('-p, --page <number>', '当前页码', '1')
   .option('-t, --total <number>', '数据总量', '1')
+  .option('-f, --file <string>', '需要输入的文件')
   .option('-o, --output <dir>', '输出目录', '.')
   .action((options) => {
-    console.log(`运行MCA工具(参数: mode=${options.mode}, page=${options.page}, size=${options.size}, total=${options.total}, output=${options.output})`);
-    mcaMain(options.mode, options.page, options.size, options.total, options.output);
+    console.log(`运行MCA工具(参数: mode=${options.mode}, page=${options.page}, size=${options.size}, total=${options.total}, file=${options.file}, output=${options.output})`);
+    mcaMain(options.mode, options.page, options.size, options.total, options.file, options.output);
   });
 
 program

@@ -15,7 +15,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 
 
 
-const authorization = 'Bearer 9fe2b013-3a9b-42cc-b729-913e65fc4c9c';
+const authorization = 'Bearer 2152a448-54f6-456d-ba0c-db4cd55e40c7';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -691,24 +691,32 @@ export async function jujiaFeeHistoryExport(ahbx1501, year=2025){
   return request.post(url, null, {params: params, responseType: 'stream'});
 }
 
+
 /**
  * 居家养老上门服务-综合查询-列表
  * 
+ * @param {*} ahbx1503m 根据身份证查询
  * @param {*} size 
  * @param {*} current 
  * @param {*} year 
  * @param {*} queryInfo 不知道干啥的
  * @returns 
  */
-export async function jujiaVisitServiceQuery(size=1, current=1, year=2025, queryInfo=2){
+export async function jujiaVisitServiceQuery(ahbx1503m, size=1, current=1, year=2025, queryInfo=2){
   let url = '/ylapi/ylpt/v24Visitingservice/homeVisitServiceQuery';
 
   let params = {
+    ahbx1503m: ahbx1503m,
     current: current,
     size: size,
     queryInfo: queryInfo,
     year: year,
   }
+
+  // 过滤掉值为 undefined 的字段
+  params = Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => value !== undefined &&  value !== null)
+  );
 
   return request.post(url, null, {params: params});
 }
@@ -750,6 +758,25 @@ export async function jujiaServiceHistoryExport(ahbx1501, year=2025){
   }
 
   return request.post(url, null, {params: params, responseType: 'stream'});
+}
+
+/**
+ * 居家养老上门服务-综合查询-导出二维码
+ * @param {*} size  分页查询数量
+ * @param {*} ahbx1501
+ * @param {*} year  年份
+ * @returns 
+ */
+export async function jujiaServiceQrCodeExport(ahbx1503, queryInfo=2, year=2025){
+  let url = '/ylapi/ylpt/v24Visitingservice/oldVisitingBatchQRExport';
+
+  let params = {
+    ahbx1503: ahbx1503,
+    queryInfo: queryInfo,
+    year: year,
+  }
+
+  return request.get(url, {params: params, responseType: 'stream'});
 }
 
 /*******以上**********************************  居家养老上门服务  ****************************************** */
