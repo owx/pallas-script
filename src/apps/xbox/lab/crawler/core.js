@@ -1,25 +1,62 @@
 #!/usr/bin/env node
-import { axiosManager } from '#utils/AxiosManager.js';
+import { crawler } from "#utils/FullCrawler.js";
 
 
+export async function crawlerStatic(url){
+    try {
+        // 静态爬取
+        const staticResult = await crawler.crawl(url);
+        console.log('静态页面标题:', staticResult.title);
+        console.log('链接数量:', staticResult.links.length);
+        // console.log('详细内容:', staticResult);
 
-const authorization = 'Bearer 17d03e42-61e5-4f8f-a564-79970b3e38ab';
-const request = axiosManager.createInstance("mca", {
-  baseURL: "https://ylfw.mca.gov.cn",
-  timeout: 60000,
-  headers: {
-    authorization: authorization,
+        console.log('详细内容:', staticResult.$('article').text());
+
+        // for(const link of staticResult.links){
+        //     if(link.title.indexOf("章")>0){
+        //         console.log(link.title)
+        //     }
+        // }
+        
+    } catch (error) {
+        console.error('爬取失败:', error);
+    } finally {
+        await crawler.close();
+    }
+}
+
+export async function crawlerDynamic(url){
+  try {
+      // 动态爬取
+      const dynamicResult = await crawler.crawl(url, {
+          useDynamic: true,
+          beforeExtract: () => {
+              // 滚动到页面底部
+              window.scrollTo(0, document.body.scrollHeight);
+          }
+      });
+      console.log('动态页面标题:', dynamicResult.title);
+      console.log('详细内容:', dynamicResult);
+      for(const link of dynamicResult.links){
+          if(link.text.indexOf("章")>0){
+              console.log(link.text)
+          }
+      }
+  } catch (error) {
+      console.error('爬取失败:', error);
+  } finally {
+      await crawler.close();
   }
-})
 
+}
 
-export async function homeBedOrgList(areaCode, ahbx1701){
-  let url = '/ylapi/ylpt/v24ConstructionBed/queryHae1InfoList';
-
-  let params = {
-    ahbx1701: ahbx1701,
-    areaCode: areaCode,
+export async function crawlerSavePage(html, file='example.html'){
+  try {
+      // 保存页面
+      await crawler.savePage(html, file);
+  } catch (error) {
+      console.error('爬取失败:', error);
+  } finally {
+      await crawler.close();
   }
-
-  return request.post(url, null, {params: params});
 }

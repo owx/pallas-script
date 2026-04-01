@@ -112,6 +112,7 @@ class FullCrawler {
         console.log('1. 查找 Chrome 路径...');
         const chromePaths = [
             'D:\\Tools\\Google\\Google\\Chrome\\Application\\chrome.exe',
+            '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
             'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
             'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
