@@ -31,7 +31,7 @@ export async function parseHtml(dataFile, start=1, limit=1, thread=1) {
     const data = fs.readFileSync(dataFile, 'utf8');
     const result = await crawler.crawlStatic(null, data);
 
-    for(let idx=Number(start); idx<Number(start)+Number(limit); idx++){
+    for(let idx=(Number(start)-1); idx<(Number(start)+Number(limit)-1); idx++){
         // logger.info(`Loop-> idx=${idx}, max: ${start+limit-1}`);
 
         const link = result.links[idx];
@@ -69,7 +69,7 @@ export async function text2speech(text, output='output.mp3', voice='zh-CN-Xiaoxi
     });
   
     response.data.on('end', () => {
-        console.log('音频接收完成');
+        console.log('音频接收完成->'+output);
         writer.end();
     });
   
