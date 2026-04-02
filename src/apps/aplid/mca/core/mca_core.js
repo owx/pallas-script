@@ -15,7 +15,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 
 
 
-const authorization = 'Bearer 17d03e42-61e5-4f8f-a564-79970b3e38ab';
+const authorization = 'Bearer 810b5751-6a27-4138-89a9-6abe236de7e1';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",

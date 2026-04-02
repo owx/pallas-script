@@ -6,7 +6,7 @@ export async function labMain(mode, size, input, output){
   switch(mode){
       case 'crawler':
       case 'cl':
-        crawlerApp();
+        await crawlerApp(size);
         break;
 
       case 'download':

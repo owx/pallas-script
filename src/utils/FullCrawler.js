@@ -44,7 +44,7 @@ class FullCrawler {
         $('a').each((i, elem) => {
             const href = $(elem).attr('href');
             if (href && !href.startsWith('#')) {
-                const absoluteUrl = new URL(href, baseUrl).href;
+                const absoluteUrl = new URL(href, baseUrl||'http://localhost:3000/').href;
                 links.push({
                     text: $(elem).text().trim(),
                     href: absoluteUrl,
@@ -61,7 +61,7 @@ class FullCrawler {
         $('img').each((i, elem) => {
             const src = $(elem).attr('src');
             if (src) {
-                const absoluteUrl = new URL(src, baseUrl).href;
+                const absoluteUrl = new URL(src, baseUrl||'http://localhost:3000/').href;
                 images.push({
                     src: absoluteUrl,
                     alt: $(elem).attr('alt') || '',
@@ -73,23 +73,26 @@ class FullCrawler {
     }
 
     // 静态爬取
-    async crawlStatic(url) {
+    async crawlStatic(url, htmlData) {
         let lastError;
         
         for (let i = 0; i < this.config.retries; i++) {
             try {
-                const response = await axios({
-                    method: 'GET',
-                    url: url,
-                    headers: { 'User-Agent': this.config.userAgent },
-                    timeout: this.config.timeout
-                });
-                
-                const $ = cheerio.load(response.data);
+                let data = htmlData;
+                if(!htmlData){
+                    const response = await axios({
+                        method: 'GET',
+                        url: url,
+                        headers: { 'User-Agent': this.config.userAgent },
+                        timeout: this.config.timeout
+                    });
+                    data = response.data;
+                }
+                const $ = cheerio.load(data);
                 
                 return {
                     url,
-                    html: response.data,
+                    html: data,
                     $,
                     title: $('title').text(),
                     links: this.extractLinks($, url),
@@ -213,13 +216,13 @@ class FullCrawler {
     }
 
     // 统一爬取接口
-    async crawl(url, options = {}) {
+    async crawl(url, options = {}, htmlData) {
         const useDynamic = options.useDynamic !== undefined ? options.useDynamic : this.config.useDynamic;
         
         if (useDynamic) {
             return await this.crawlDynamic(url, options);
         } else {
-            return await this.crawlStatic(url);
+            return await this.crawlStatic(url, htmlData);
         }
     }
 

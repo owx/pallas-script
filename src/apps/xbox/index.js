@@ -16,11 +16,12 @@ program
   .command('lab')
   .description('Lab实验室工具')
   .option('-m, --mode <string>', '工作模式', 'default')
-  // .option('-p, --port <number>', '端口号', '3000')
-  // .option('-h, --host <string>', '主机名', 'localhost')
+  .option('-s, --size <number>', '批量处理数量/位置', 1)
+  .option('-i, --input <string>', '输入文件')
+  .option('-o, --output <string>', '输出文件')
   .action((options) => {
-    console.log(`运行Lab实验室工具(参数: mode=${options.mode})`);
-    labMain(options.mode);
+    console.log(`运行Lab实验室工具(参数: mode=${options.mode}, size=${options.size}, input=${options.input}, output=${options.output})`);
+    labMain(options.mode, options.size, options.input, options.output);
   });
 
 program
