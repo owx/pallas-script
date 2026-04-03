@@ -19,13 +19,13 @@ const request = axiosManager.createInstance("mca", {
 const streamPipeline = promisify(pipeline);
 
 
-export async function parseHtml(dataFile, start=1, limit=1, thread=1) {
+export async function parseHtml(dataFile, start=1, limit=1) {
     logger.info(`文件：${dataFile}, start: ${start}, limit: ${limit}`);
 
     const queue = new PQueue({
-        intervalCap: 1,   // 每个时间窗口内最多执行的任务数
-        interval: 1000,   // 时间窗口长度（毫秒）
-        concurrency: thread     // 并发数（可选，默认 Infinity）
+        // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+        // interval: 1000,   // 时间窗口长度（毫秒）
+        concurrency: 10     // 并发数（可选，默认 Infinity）
     });
 
     const data = fs.readFileSync(dataFile, 'utf8');
@@ -42,42 +42,64 @@ export async function parseHtml(dataFile, start=1, limit=1, thread=1) {
 
             const newPage = await crawler.crawlStatic(link.href);
             const content = newPage.$('article').text()
-            await text2speech(content, (idx+1) + '.mp3');
+            await text2speech(content, 'records/' +(idx+1) + '.mp3');
         });
     }
 }
 
 
-export async function text2speech(text, output='output.mp3', voice='zh-CN-XiaoxiaoNeural') {
-    const url="/api/v1/tts/createStream";
+export async function text2speech(text, output = 'output.mp3', voice = 'zh-CN-XiaoxiaoNeural') {
+    const url = "/api/v1/tts/createStream";
 
     const response = await request.post(url, {
         text: text,
         voice: voice,
     }, { responseType: 'stream' });
 
-    // 创建一个写入流，保存最终音频
-    const writer = fs.createWriteStream(output);
-    
-    let length = 0;
-    // 监听数据事件，逐块接收
-    response.data.on('data', (chunk) => {
-        // console.log(`接收到 ${chunk.length} 字节数据`);
-        length += chunk.length;
-        process.stdout.write(`\r已接收数据: ${length}`);
-        writer.write(chunk);
+    // 返回一个 Promise，等待流处理完成
+    return new Promise((resolve, reject) => {
+        const writer = fs.createWriteStream(output);
+        let length = 0;
+        
+        response.data.on('data', (chunk) => {
+            length += chunk.length;
+            process.stdout.write(`\r已接收数据: ${length}`);
+            writer.write(chunk);
+        });
+        
+        response.data.on('end', () => {
+            writer.end();
+            console.log(`音频接收完成 -> ${output}`);
+            resolve({
+                success: true,
+                output: output,
+                size: length,
+                message: '音频生成成功'
+            });
+        });
+        
+        response.data.on('error', (err) => {
+            writer.end();
+            console.error(`${output} - 流错误:`, err);
+            reject({
+                success: false,
+                output: output,
+                error: err,
+                message: '音频生成失败'
+            });
+        });
+        
+        writer.on('error', (err) => {
+            reject({
+                success: false,
+                output: output,
+                error: err,
+                message: '文件写入失败'
+            });
+        });
     });
-  
-    response.data.on('end', () => {
-        console.log('音频接收完成->'+output);
-        writer.end();
-    });
-  
-    response.data.on('error', (err) => {
-        console.error(output + '-流错误:', err);
-    });
-
 }
+
 
 export async function trest(){
 
