@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import { hwMain } from './hardware/index.js';
 import { labMain } from './lab/index.js';
 import { qaMain } from './quality/index.js';
 import { utilsMain } from './utils/index.js';
@@ -11,6 +12,18 @@ program
   .description('XBox Development Support CLI Tools')
   .version('1.0.0');
 
+
+program
+  .command('hw')
+  .description('Hardware硬件工具集')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-s, --size <number>', '批量处理数量/位置', 1)
+  .option('-i, --input <string>', '输入文件')
+  .option('-o, --output <string>', '输出文件')
+  .action((options) => {
+    console.log(`运行硬件测试工具(参数: mode=${options.mode}, size=${options.size}, input=${options.input}, output=${options.output})`);
+    hwMain(options.mode, options.size, options.input, options.output);
+  });
 
 program
   .command('lab')
