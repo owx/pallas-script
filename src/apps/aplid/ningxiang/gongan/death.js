@@ -3,10 +3,11 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import { encryptUtil } from '#utils/EncryptUtil.ts'
-import  { logger } from '#utils/logger.js';
 // import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
+import Logger from '#src/utils/LoggerUtils.js'
 
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 let Authorization = 'Bearer e278fa4a-0312-490a-873f-d25ce21d4f44';
 axios.interceptors.request.use(config => {

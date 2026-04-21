@@ -1,7 +1,11 @@
+#!/usr/bin/env node
+import Logger from '#src/utils/LoggerUtils.js'
 import mqtt from 'mqtt';
 import { handlerMessage } from './radar.js';
 
 export function startService(){
+  // const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+  const logger = new Logger();
 
   // 连接选项
   const options = {
@@ -18,12 +22,12 @@ export function startService(){
 
   // 连接成功回调
   client.on('connect', () => {
-    console.log('Connected to MQTT server')
+    logger.info('Connected to MQTT server')
     
     // 订阅主题
     client.subscribe('#', { qos: 0 }, (err) => {
       if (!err) {
-        console.log('Subscribed to topic successfully')
+        logger.info('Subscribed to topic successfully')
       }
     })
   })
@@ -36,7 +40,7 @@ export function startService(){
 
     // console.log(`Received message from ${topic}`)
     if(topic.indexOf("MH1020010601260001") >= 0){
-      console.log(`Received message from ${topic}: ${message.toString()}`)
+      logger.info(`Received message from ${topic}: ${message.toString()}`)
     }
     
     

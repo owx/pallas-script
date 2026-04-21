@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '#utils/logger.js';
 import {
   queryPrjInfo,
   homeBedOrgList,
@@ -8,7 +7,9 @@ import {
   homeBedApplySave,
   homeBedApplySubmit,
 } from "../core/mca_core.js";
+import Logger from '#src/utils/LoggerUtils.js'
 
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 /**
  * 主入口，自动化处理

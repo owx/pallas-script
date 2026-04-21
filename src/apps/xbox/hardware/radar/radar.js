@@ -1,4 +1,6 @@
-import { logger } from '#utils/logger.js';
+import Logger from '#utils/LoggerUtils.js';
+
+const logger = new Logger();
 
 let g_posture = "未知"
 let oldTime = new Date();

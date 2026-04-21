@@ -3,9 +3,12 @@ import PQueue from 'p-queue';
 import fs from 'fs';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
-import { logger } from '#utils/logger.js';
+// import { logger } from '#utils/logger.js';
 import { axiosManager } from '#utils/AxiosManager.js';
 import { crawler } from "#utils/FullCrawler.js";
+
+import Logger from '#src/utils/LoggerUtils.js'
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 
 // const authorization = 'Bearer 9792bbf2-650b-4943-8945-bd708d26c366';

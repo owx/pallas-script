@@ -1,10 +1,13 @@
 import fs from 'fs';
 import PQueue from 'p-queue';
 import mysql from 'mysql2/promise';
-import  { logger } from '#utils/logger.js';
 import MysqlUtils from "#src/utils/MysqlUtils.js";
 import { queryNjCzrkWithZd } from './core.js';
 // import { initDB, saveData, fetchData, dynamicInsert } from '#utils/MysqlUtils.js';
+import Logger from '#src/utils/LoggerUtils.js'
+
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+
 
 export async function processHujiData(idCardFile, thread=100, startLine=0, limit=10000) {
     

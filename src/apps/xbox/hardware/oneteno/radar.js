@@ -1,4 +1,4 @@
-import { logger } from '#utils/logger.js';
+// import { logger } from '#utils/logger.js';
 
 let g_posture = "未知"
 let oldTime = new Date();
@@ -33,9 +33,9 @@ export function handlerMessage (topic, message){
   if(deviceSn =="13300000341000000167"){
   // if(deviceSn =="19900000131000000436"){
 
-    logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
-    logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 
-    logger.debug(`人数：` + peopleNum)
+    // logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
+    // logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 
+    // logger.debug(`人数：` + peopleNum)
 
     console.log(`MQTTX Message ${topic}: ${hexString}`)
     if(com==1){

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '#utils/logger.js';
 import fs from 'fs';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
@@ -11,6 +10,9 @@ import {
   jujiaFeeHistoryList,
   jujiaFeeHistoryExport
 } from "../core/mca_core.js";
+import Logger from '#src/utils/LoggerUtils.js'
+
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 // 创建任务队列
 const queue = new PQueue({ 

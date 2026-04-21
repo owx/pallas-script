@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
-import  { logger } from '#utils/logger.js';
 import {
   queryUserInfo,
   queryPrjInfo,
@@ -11,6 +10,10 @@ import {
   jujiaGovAuditList,
   jujiaGovAuditApprove,
 } from "../core/mca_core.js";
+import Logger from '#src/utils/LoggerUtils.js'
+
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+
 
 /**
  * 街道账号，自动审批

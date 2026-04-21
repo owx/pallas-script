@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import fs from 'fs';
 import PQueue from 'p-queue';
-import  { logger } from '#utils/logger.js';
 import {
   homebedAllocList,
   homebedEmployeeList,
   homebedAllocSubmit,
 } from "../core/mca_core.js";
+import Logger from '#src/utils/LoggerUtils.js'
 
+const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 /**
  * 主入口，自动化处理
