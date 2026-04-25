@@ -32,11 +32,17 @@ export async function nxMain(mode, size, file="./oldman.txt") {
             break;
 
         case "huji":
+            // 户籍数据处理
             processHujiData("D:/Temp/nx/registered_population.txt");
             break;
 
         default:
-            test();
+            console.log("ap nx -m(mode)")
+            console.log("\t-m slowsql \t慢SQL数据分析")
+            console.log("\t-m death \t多元死亡数据查询")
+            console.log("\t-m autofill \t宁享-能力等级评估自动填表")
+            console.log("\t-m jinmin \t金民工单数据分析")
+            console.log("\t-m huji \t户籍数据处理")
             break;
     }
 }

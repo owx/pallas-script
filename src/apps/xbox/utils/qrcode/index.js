@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { generateImageWithQRCodeAndText } from './core.js';
-import Logger from '#src/utils/LoggerUtils.js'
+import { logger } from '#src/utils/LoggerUtils.js'
 
-const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+// const logger = new Logger();
 
 export function qrcodeApp() {
 

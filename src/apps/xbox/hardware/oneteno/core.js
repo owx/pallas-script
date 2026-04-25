@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-import Logger from '#src/utils/LoggerUtils.js'
 import mqtt from 'mqtt';
-import { handlerMessage } from './radar.js';
+import { handlerMessage } from './handler.js';
+
 
 export function startService(){
-  // const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
-  const logger = new Logger();
 
   // 连接选项
   const options = {
@@ -22,12 +20,12 @@ export function startService(){
 
   // 连接成功回调
   client.on('connect', () => {
-    logger.info('Connected to MQTT server')
+    console.log('Connected to MQTT server')
     
     // 订阅主题
     client.subscribe('#', { qos: 0 }, (err) => {
       if (!err) {
-        logger.info('Subscribed to topic successfully')
+        console.log('Subscribed to topic successfully')
       }
     })
   })
@@ -36,13 +34,10 @@ export function startService(){
   client.on('message', (topic, message) => {
     // message 是 Buffer 类型，需要转换为字符串
     // console.log(`Received message from ${topic}: ${message.toString()}`)
+    // logger.info(`${topic}: ${message.toString()}`, null, "MQTT")
 
+    handlerMessage(topic, message.toString());
 
-    // console.log(`Received message from ${topic}`)
-    if(topic.indexOf("MH1020010601260001") >= 0){
-      logger.info(`Received message from ${topic}: ${message.toString()}`)
-    }
-    
     
   // if(topic != "mm_detect_data"){
   //     handlerMessage(topic, message);

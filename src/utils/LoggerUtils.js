@@ -272,8 +272,8 @@ class Logger {
 export default Logger;
 
 // 创建单例实例
-// export const loggerInstance = new LoggerService();
-// export const loggerInstance = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+export const logger = new Logger();
+// export const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 // 导出单例和类
 // module.exports = {

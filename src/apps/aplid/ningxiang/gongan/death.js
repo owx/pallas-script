@@ -2,19 +2,22 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { encryptUtil } from '#utils/EncryptUtil.ts'
-// import { writeFileWithBOM } from '../../common/file.js';
 import PQueue from 'p-queue';
+import { axiosManager } from '#utils/AxiosManager.js';
+import { encryptUtil } from '#utils/EncryptUtil.ts'
 import Logger from '#src/utils/LoggerUtils.js'
+
 
 const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
-let Authorization = 'Bearer e278fa4a-0312-490a-873f-d25ce21d4f44';
-axios.interceptors.request.use(config => {
-  config.headers['Authorization'] = Authorization;
-  return config;
-});
-
+const authorization = 'Bearer d892ed35-797b-4e16-a9bc-dc6aa0e1754e';
+const request = axiosManager.createInstance("mca", {
+  baseURL: "http://180.101.239.5:11762",
+  timeout: 60000,
+  headers: {
+    Authorization: authorization,
+  }
+})
 
 /**
  * 宁享-多元死亡数据查询
@@ -30,7 +33,7 @@ function queryDeathInfo(name, idCard){
       "idCard": idCard
     }
   
-    return axios.post('http://180.101.239.5:11762/bussiness/dpDeathQueryRecords/query', data);
+    return request.post('/bussiness/dpDeathQueryRecords/query', data);
 }
 
 
@@ -41,7 +44,7 @@ async function queryDeath(queue, name, idCard, count=0){
 
     let jsonData = resp.data;
     // logger.info(name + ',' +  idCard + ', 成功, ' + JSON.stringify(jsonData) );
-    let decryptData = encryptUtil.decrypt(jsonData, Authorization)
+    let decryptData = encryptUtil.decrypt(jsonData, authorization)
     // logger.info(name + ',' +  idCard + ', 成功, ' + decryptData );
 
     let response = JSON.parse(decryptData);
@@ -168,7 +171,7 @@ export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, t
           
           let jsonData = resp.data;
           // logger.info(name + ',' +  idCard + ', 成功, ' + JSON.stringify(jsonData) );
-          let decryptData = encryptUtil.decrypt(jsonData, Authorization)
+          let decryptData = encryptUtil.decrypt(jsonData, authorization)
           // logger.info(name + ',' +  idCard + ', 成功, ' + decryptData );
 
           let response = JSON.parse(decryptData);

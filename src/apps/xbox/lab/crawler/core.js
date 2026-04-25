@@ -7,8 +7,8 @@ import { promisify } from 'util';
 import { axiosManager } from '#utils/AxiosManager.js';
 import { crawler } from "#utils/FullCrawler.js";
 
-import Logger from '#src/utils/LoggerUtils.js'
-const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+import { logger } from '#src/utils/LoggerUtils.js'
+// const logger = new Logger();
 
 
 // const authorization = 'Bearer 9792bbf2-650b-4943-8945-bd708d26c366';

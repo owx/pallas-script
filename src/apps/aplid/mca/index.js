@@ -81,11 +81,10 @@ export async function mcaMain(mode, page, size, total, file, output) {
 
         default:
             console.log("ap mca -m(mode)")
-            console.log("\t-m FeeConfirm : 居家-服务费用确认")
-            console.log("\t-m FeeHistoryExport : 居家-服务费用确认-已经确认历史费用导出")
-            console.log("\t-m ServiceQrCodeExport : 居家-服务二维码导出")
-            console.log("\t-m ServiceHistoryExport : 居家服务历史导出")
-
+            console.log("\t-m FeeConfirm \t\t\t居家-服务费用确认")
+            console.log("\t-m FeeHistoryExport \t\t居家-服务费用确认-已经确认历史费用导出")
+            console.log("\t-m ServiceQrCodeExport \t\t居家-服务二维码导出")
+            console.log("\t-m ServiceHistoryExport \t居家服务历史导出")
             break;
     }
 
