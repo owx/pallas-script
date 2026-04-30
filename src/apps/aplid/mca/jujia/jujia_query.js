@@ -10,9 +10,9 @@ import {
   jujiaServiceHistoryExport,
   jujiaServiceQrCodeExport,
 } from "../core/mca_core.js";
-import Logger from '#src/utils/LoggerUtils.js'
+import { logger } from '#src/utils/LoggerUtils.js'
 
-const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+// const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 
 const streamPipeline = promisify(pipeline);
@@ -59,7 +59,7 @@ export async function jjServiceQrCodeExport(filePath=".", size=1, current=1, fil
     let arr = line.split(",");
     let idCard =arr[0].trim();
     // let name =arr[1].trim();
-    logger.error('处理idCard->' +  idCard);
+    logger.info('处理idCard->' +  idCard);
 
     let ahbx1503 = idCard;
 
@@ -97,10 +97,10 @@ export async function jjServiceQrCodeExport(filePath=".", size=1, current=1, fil
 }
 
 
-export async function jjAutoJujiaServiceHistoryExport(filePath=".", size=1, current=1){
+export async function jjAutoJujiaServiceHistoryExport(filePath=".", size=1, current=1, year=2025){
 
   // 1. 获取已确认费用列表 ， 1 是已确认
-  let feeListResp = await jujiaVisitServiceQuery(null, size, current);
+  let feeListResp = await jujiaVisitServiceQuery(null, size, current, year);
   let feeList = feeListResp.data.data.records;
   
   logger.info("居家上门-综合查询-服务列表: ", feeList.length)
@@ -108,8 +108,8 @@ export async function jjAutoJujiaServiceHistoryExport(filePath=".", size=1, curr
   
   // 3. 自动审核
   const queue = new PQueue({
-    intervalCap: 1,   // 每个时间窗口内最多执行的任务数
-    interval: 5000,   // 时间窗口长度（毫秒）
+    // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+    // interval: 5000,   // 时间窗口长度（毫秒）
     concurrency: 1     // 并发数（可选，默认 Infinity）
   });
 
@@ -118,7 +118,7 @@ export async function jjAutoJujiaServiceHistoryExport(filePath=".", size=1, curr
     let ahbx1502 = feeList[i].ahbx1502;
 
     queue.add(async () => {
-      const response = await jujiaServiceHistoryExport(ahbx1501)
+      const response = await jujiaServiceHistoryExport(ahbx1501, year)
       let fileName =  (size*(current-1) + i+1) + ".（" + ahbx1502 +"）居家养老上门服务历史表.xlsx";
       let fullPath = filePath + "\\" + fileName;
 

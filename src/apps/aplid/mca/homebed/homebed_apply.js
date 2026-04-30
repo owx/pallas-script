@@ -7,9 +7,9 @@ import {
   homeBedApplySave,
   homeBedApplySubmit,
 } from "../core/mca_core.js";
-import Logger from '#src/utils/LoggerUtils.js'
+import { logger } from '#src/utils/LoggerUtils.js'
 
-const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
+// const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 /**
  * 主入口，自动化处理

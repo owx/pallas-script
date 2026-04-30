@@ -5,12 +5,11 @@ import path from 'path';
 import PQueue from 'p-queue';
 import { axiosManager } from '#utils/AxiosManager.js';
 import { encryptUtil } from '#utils/EncryptUtil.ts'
-import Logger from '#src/utils/LoggerUtils.js'
+import { logger } from '#src/utils/LoggerUtils.js'
 
+// const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
-const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
-
-const authorization = 'Bearer d892ed35-797b-4e16-a9bc-dc6aa0e1754e';
+const authorization = 'Bearer f4fdbf6c-b9d2-4536-a4b9-e197618b8e7e';
 const request = axiosManager.createInstance("mca", {
   baseURL: "http://180.101.239.5:11762",
   timeout: 60000,
@@ -152,7 +151,6 @@ export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, t
     const queue = new PQueue({ concurrency: thread });
 
     let list = data.split('\n');
-    let content = "";
     for(let i=startLine; i<list.length; i++){
       let line = list[i];
 
@@ -164,7 +162,7 @@ export async function batchQueryDeathData(idCardFile, prefixName, startLine=0, t
       let arr = line.split(",");
       let idCard =arr[0].trim();
       let name = prefixName + i;
-      logger.error(name + ',' +  idCard);
+      logger.info(name + ',' +  idCard);
       queue.add(async () => {
         let rowData = '';
         await queryDeathInfo(name, idCard).then((resp)=>{
