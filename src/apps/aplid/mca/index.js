@@ -42,18 +42,19 @@ export async function mcaMain(mode, page, size, total, file, output) {
             hbAutoJiaChuangSatisfaction()
             break;
 
-
-        case 'jujia':
-
+        case 'ServiceApply':
             // 街道提交申请
-            // jjAutoSubmitApply(30, "南京爱普雷德电子科技有限公司");
+            jjAutoSubmitApply(size, "南京爱普雷德电子科技有限公司");
 
+        case 'ServiceStreetApprove':
             // 街道审核
             // jjJiedaoAutoAudit ("刘勤", 17);
 
+        case 'ServiceDistinctApprove':
             // 区县审核
             // jjQuxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
 
+        case 'jujia':
             // 统计数据
             //jjAutoAllocStatistic("d:\\temp\\新源.csv", 500);
 
@@ -83,8 +84,11 @@ export async function mcaMain(mode, page, size, total, file, output) {
             console.log("ap mca -m(mode)")
             console.log("\t-m FeeConfirm \t\t\t居家-服务费用确认")
             console.log("\t-m FeeHistoryExport \t\t居家-服务费用确认-已经确认历史费用导出")
+            console.log("\t-m ServiceApply \t\t居家-申请")
+            console.log("\t-m ServiceStreetApprove \t居家-申请街道审批")
+            console.log("\t-m ServiceDistinctApprove \t居家-申请区县审批")
             console.log("\t-m ServiceQrCodeExport \t\t居家-服务二维码导出")
-            console.log("\t-m ServiceHistoryExport \t居家服务历史导出")
+            console.log("\t-m ServiceHistoryExport \t居家-服务历史导出")
             break;
     }
 
