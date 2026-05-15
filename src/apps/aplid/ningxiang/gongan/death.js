@@ -9,7 +9,7 @@ import { logger } from '#src/utils/LoggerUtils.js'
 
 // const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
-const authorization = 'Bearer f4fdbf6c-b9d2-4536-a4b9-e197618b8e7e';
+const authorization = 'Bearer 3cc745f7-4f80-441a-ad43-5e38d2ed0edc';
 const request = axiosManager.createInstance("mca", {
   baseURL: "http://180.101.239.5:11762",
   timeout: 60000,

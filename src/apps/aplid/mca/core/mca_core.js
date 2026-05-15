@@ -15,7 +15,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 
 
 
-const authorization = 'Bearer f5d6eaf4-2cbe-498e-bc28-0e5d3d0c77e8';
+const authorization = 'Bearer 667453eb-acb0-4c72-8bff-aba72c6ac3ee';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -407,6 +407,32 @@ export async function queryPrjInfo(year=2025){
 }
 
 
+/**
+ * 
+ * 获取下载文件接口
+ * 已知用在居家-综合查询-服务历史-照片下载
+ * 
+ */
+export async function getFileDownloadUrl(ahbx1904){
+  let url = '/ylapi/ylptinterface/comm/file/downloadUrl';
+
+  let params = {
+    fileId: ahbx1904,
+  }
+
+  return request.get(url, {params: params});
+}
+
+
+/**
+ * 通用文件下载接口
+ * @param {*} url 
+ * @returns 
+ */
+export async function downloadFile(url){
+  return request.get(url, { responseType: 'stream'});
+}
+
 
 /*******以下**********************************  居家养老上门服务  ****************************************** */
 
@@ -702,11 +728,12 @@ export async function jujiaFeeHistoryExport(ahbx1501, year=2025){
  * @param {*} queryInfo 不知道干啥的
  * @returns 
  */
-export async function jujiaVisitServiceQuery(ahbx1503m, size=1, current=1, year=2025, queryInfo=2){
+export async function jujiaVisitServiceQuery(areaCode, ahbx1503m, size=1, current=1, year=2025, queryInfo=2){
   let url = '/ylapi/ylpt/v24Visitingservice/homeVisitServiceQuery';
 
   let params = {
     ahbx1503m: ahbx1503m,
+    areaCode: areaCode,
     current: current,
     size: size,
     queryInfo: queryInfo,
@@ -737,6 +764,21 @@ export async function jujiaServiceHistory(ahbx1501, size=1, year=2025){
     size: size,
     ahbx1501: ahbx1501,
     year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+/**
+ * 居家养老上门服务-综合查询-服务历史-详情
+ * @param {*} jjsm0601 
+ * @returns 
+ */
+export async function jujiaServiceInfoDetails(jjsm0601){
+  let url = '/ylapi/ylpt/v24Visitingservice/serviceInfoDetails';
+
+  let params = {
+    jjsm0601: jjsm0601,
   }
 
   return request.post(url, null, {params: params});

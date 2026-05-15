@@ -9,12 +9,14 @@ import { jjAutoSubmitApply } from './jujia/jujia_apply.js';
 import { jjJiedaoAutoAudit, jjQuxianAutoAudit } from './jujia/jujia_audit.js';
 import { jjAutoAllocStatistic } from './jujia/jujia_alloc.js';
 import { jjAutoJujiaFeeHistoryExport, jjAutoJujiaFeeConfirm } from './jujia/jujia_fee.js';
-import { jjAutoJujiaServiceHistoryExport, jjServiceQrCodeExport } from './jujia/jujia_query.js';
+import { jjAutoJujiaServiceHistoryExport, jjServiceQrCodeExport, jjServicePhotoExport } from './jujia/jujia_query.js';
 
 
 export async function mcaMain(mode, page, size, total, file, output) {
 
     switch(mode){
+
+        /*************************************** 家庭养老床位建设 ***********************************/
         case 'homebed':
 
             // 街道提交申请
@@ -54,18 +56,26 @@ export async function mcaMain(mode, page, size, total, file, output) {
             // 区县审核
             // jjQuxianAutoAudit("654024104000", "麦依尔·革命努尔", 100, "主任")
 
+
+        /*************************************** 居家养老上门服务 ***********************************/
+
         case 'jujia':
             // 统计数据
             //jjAutoAllocStatistic("d:\\temp\\新源.csv", 500);
 
         case 'ServiceHistoryExport':
             // 居家服务历史导出
-            jjAutoJujiaServiceHistoryExport(output, size, page);
+            jjAutoJujiaServiceHistoryExport(page, size, total, file, output, 2025);
             break;
 
         case 'ServiceQrCodeExport':
             // 居家-服务二维码导出
-            jjServiceQrCodeExport(output, size, page, file);
+            jjServiceQrCodeExport(page, size, total, file, output, 2025);
+            break;
+
+        case 'ServicePhotoExport':
+            // 居家-服务历史照片导出
+            jjServicePhotoExport(page, size, total, file, output, 2024);
             break;
             
         case 'FeeHistoryExport':
@@ -88,6 +98,7 @@ export async function mcaMain(mode, page, size, total, file, output) {
             console.log("\t-m ServiceStreetApprove \t居家-申请街道审批")
             console.log("\t-m ServiceDistinctApprove \t居家-申请区县审批")
             console.log("\t-m ServiceQrCodeExport \t\t居家-服务二维码导出")
+            console.log("\t-m ServicePhotoExport \t\t居家-服务历史照片导出")
             console.log("\t-m ServiceHistoryExport \t居家-服务历史导出")
             break;
     }
