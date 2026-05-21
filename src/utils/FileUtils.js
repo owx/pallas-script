@@ -1,7 +1,9 @@
 import fs from 'fs';
+import { access, constants } from 'fs/promises';
 import axios from 'axios';
 import AdmZip from 'adm-zip';
 import path from 'path';
+import { pipeline } from 'stream/promises';
 
 
 /**
@@ -16,6 +18,22 @@ export function writeFileWithBOM(path, content){
     fs.writeFileSync(path, buffer);
 
 }
+
+/**
+ * 判断文件是否存在
+ * @param {*} filePath 
+ * @returns 
+ */
+export async function fileExists(filePath) {
+  return fs.existsSync(fullPath);
+  // try {
+  //   await access(filePath, constants.F_OK);
+  //   return true;
+  // } catch {
+  //   return false;
+  // }
+}
+
 
 export async function downloadFiles(urlsStr, prefix) {
     console.log(prefix + ":" + urlsStr);
@@ -42,25 +60,30 @@ export async function downloadFiles(urlsStr, prefix) {
 
 export async function downloadFile(url, dest) {
     const baseUrl = "https://chifeng-nx.njapld.com:7979";
-    if(url.indexOf("http")!==0){
-      url = baseUrl + url;
-    }
+    const fullUrl = url.indexOf("http") === 0 ? url : baseUrl + url;
+    
+    try {
+        // 1. 进行下载请求
+        const response = await axios({
+            method: 'get',
+            url: fullUrl,
+            responseType: 'stream'
+        });
 
-    const writer = fs.createWriteStream(dest);
-    
-    const request = axios.create({baseURL: url});
-    const response = await request({
-      method: 'get',
-      url: url,
-      responseType: 'stream'
-    });
-    
-    response.data.pipe(writer);
-    
-    return new Promise((resolve, reject) => {
-      writer.on('finish', resolve);
-      writer.on('error', reject);
-    });
+        // 2. 文件路径不存在，则进行创建
+        const dir = path.dirname(dest);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+
+        // 3. 下载内容保存到文件
+        const writer = fs.createWriteStream(dest);
+        await pipeline(response.data, writer);
+        // console.log(`文件下载成功: ${dest}`);
+    } catch (error) {
+        // console.error(`下载失败: ${fullUrl}`, error.message);
+        throw error;
+    }
   
 }
 

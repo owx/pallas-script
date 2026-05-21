@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { axiosManager } from '#utils/AxiosManager.js';
 
-
 /**
  * 全国养老服务信息系统
  * https://ylfw.mca.gov.cn/
@@ -14,8 +13,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 街道申请，街道审批，县审批
 // 
 
-
-const authorization = 'Bearer 667453eb-acb0-4c72-8bff-aba72c6ac3ee';
+const authorization = 'Bearer 3f169c49-afdc-4ffe-8ea3-7c862e051e6e';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -24,6 +22,67 @@ const request = axiosManager.createInstance("mca", {
     authorization: authorization,
   }
 })
+
+
+/*****************************************  通用接口  ****************************************** */
+
+/**
+ * 
+ * 查询当前账号用户信息
+ * 
+ */
+export async function queryUserInfo(appId='ylpt'){
+  let url = '/ylapi/console/dsrpt/user/info';
+
+  let params = {
+    appId: appId,
+  }
+
+  return request.get(url, {params: params});
+}
+
+
+/**
+ * 
+ * 查询行政区划信息
+ * 
+ */
+export async function queryAreaInfo(code='654023103000'){
+  let url = '/ylapi/console/area/getFullAreaByCode/' + code;
+  return request.get(url);
+}
+
+/**
+ * 
+ * 查询项目详情
+ * 
+ */
+export async function queryPrjInfo(year=2025){
+  let url = '/ylapi/ylpt/v24ProjectInfo/applyDetail';
+
+  let params = {
+    year: year,
+  }
+
+  return request.post(url, null, {params: params});
+}
+
+
+/**
+ * 
+ * 获取下载文件接口
+ * 已知用在居家-综合查询-服务历史-照片下载
+ * 
+ */
+export async function getFileDownloadUrl(ahbx1904){
+  let url = '/ylapi/ylptinterface/comm/file/downloadUrl';
+
+  let params = {
+    fileId: ahbx1904,
+  }
+
+  return request.get(url, {params: params});
+}
 
 
 
@@ -363,77 +422,6 @@ export async function hbIntegratedQueryDetails(ahbx1501, ahbx1601){
 
 
 
-/*****************************************  通用接口  ****************************************** */
-
-/**
- * 
- * 查询当前账号用户信息
- * 
- */
-export async function queryUserInfo(appId='ylpt'){
-  let url = '/ylapi/console/dsrpt/user/info';
-
-  let params = {
-    appId: appId,
-  }
-
-  return request.get(url, {params: params});
-}
-
-
-/**
- * 
- * 查询行政区划信息
- * 
- */
-export async function queryAreaInfo(code='654023103000'){
-  let url = '/ylapi/console/area/getFullAreaByCode/' + code;
-  return request.get(url);
-}
-
-/**
- * 
- * 查询项目详情
- * 
- */
-export async function queryPrjInfo(year=2025){
-  let url = '/ylapi/ylpt/v24ProjectInfo/applyDetail';
-
-  let params = {
-    year: year,
-  }
-
-  return request.post(url, null, {params: params});
-}
-
-
-/**
- * 
- * 获取下载文件接口
- * 已知用在居家-综合查询-服务历史-照片下载
- * 
- */
-export async function getFileDownloadUrl(ahbx1904){
-  let url = '/ylapi/ylptinterface/comm/file/downloadUrl';
-
-  let params = {
-    fileId: ahbx1904,
-  }
-
-  return request.get(url, {params: params});
-}
-
-
-/**
- * 通用文件下载接口
- * @param {*} url 
- * @returns 
- */
-export async function downloadFile(url){
-  return request.get(url, { responseType: 'stream'});
-}
-
-
 /*******以下**********************************  居家养老上门服务  ****************************************** */
 
 /**
@@ -728,12 +716,13 @@ export async function jujiaFeeHistoryExport(ahbx1501, year=2025){
  * @param {*} queryInfo 不知道干啥的
  * @returns 
  */
-export async function jujiaVisitServiceQuery(areaCode, ahbx1503m, size=1, current=1, year=2025, queryInfo=2){
+export async function jujiaVisitServiceQuery(areaCode, ahbx1503m, jjsm0011=30, size=1, current=1, year=2025, queryInfo=2){
   let url = '/ylapi/ylpt/v24Visitingservice/homeVisitServiceQuery';
 
   let params = {
     ahbx1503m: ahbx1503m,
     areaCode: areaCode,
+    jjsm0011: jjsm0011,
     current: current,
     size: size,
     queryInfo: queryInfo,

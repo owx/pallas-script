@@ -75,7 +75,7 @@ export async function mcaMain(mode, page, size, total, file, output) {
 
         case 'ServicePhotoExport':
             // 居家-服务历史照片导出
-            jjServicePhotoExport(page, size, total, file, output, 2024);
+            jjServicePhotoExport(page, size, total, file, output, 2024, 340302000000);
             break;
             
         case 'FeeHistoryExport':

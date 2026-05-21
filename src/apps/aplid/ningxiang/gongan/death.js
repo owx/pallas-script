@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import PQueue from 'p-queue';
@@ -9,7 +8,7 @@ import { logger } from '#src/utils/LoggerUtils.js'
 
 // const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
-const authorization = 'Bearer 3cc745f7-4f80-441a-ad43-5e38d2ed0edc';
+const authorization = 'Bearer 60c6fcc3-5548-499e-b2ab-dbea8dd3503b';
 const request = axiosManager.createInstance("mca", {
   baseURL: "http://180.101.239.5:11762",
   timeout: 60000,

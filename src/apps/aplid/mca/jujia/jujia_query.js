@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 import PQueue from 'p-queue';
 import fs from 'fs';
-import path from 'path';
-import { access } from 'fs/promises';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
+import { logger } from '#utils/LoggerUtils.js'
+import { fileExists, downloadFile } from '#src/utils/FileUtils.js';
 import {
-  downloadFile,
   getFileDownloadUrl,
   jujiaVisitServiceQuery,
   jujiaServiceHistory,
@@ -14,69 +13,61 @@ import {
   jujiaServiceHistoryExport,
   jujiaServiceQrCodeExport,
 } from "../core/mca_core.js";
-import { logger } from '#utils/LoggerUtils.js'
-
-
-const queue = new PQueue({
-  // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
-  // interval: 1000,   // 时间窗口长度（毫秒）
-  concurrency: 1     // 并发数（可选，默认 Infinity）
-});
+import { error } from 'console';
 
 const streamPipeline = promisify(pipeline);
 
-async function fileExists(filePath) {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
+
+// 1. 通用任务-所有业务都用
+const queue = new PQueue({
+  // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+  // interval: 1000,   // 时间窗口长度（毫秒）
+  concurrency: 1,      // 并发数（可选，默认 Infinity）
+});
+
+// 2. 专用任务-照片导出，依次处理老人的上门服务记录
+const dlQueue = new PQueue({
+  intervalCap: 1,
+  interval: 1000,
+  concurrency: 1,
+});
+
+// 2. 专用任务-照片导出，依次下载老人上门服务记录中的服务历史照片
+const picDlQueue = new PQueue({
+  // intervalCap: 20,
+  // interval: 1000,
+  concurrency: 10,
+});
 
 
-async function downloadFileWithId(ahbx1904, fullPath) {
-  // 1 获取下载地址
-  const resp3 = await getFileDownloadUrl(ahbx1904)
-  // console.log(resp3.data);
-  let fileUrl = resp3.data.data;
+/*******************************************************  居家上门-服务历史照片导出  *****************************************************************/
 
-  // 2 下载url文件
-  const response = await downloadFile(fileUrl);
 
-  // let fileName =  (size*(page-1) + i+1) + ".（" + ahbx1502 +"）扫码评价二维码.pdf";
-  // let fileName =  (size*(page-1) + i+1) + "." + "" + "" + ahbx1503 +"-扫码评价二维码.pdf";
-  // let fullPath = output + "\\" + "test.jpg";
-
-  const dir = path.dirname(fullPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-
-  // let exists = await fileExists(fullPath);
-  // if(exists){
-  //   logger.info("【跳过】文件已经存在: ", fileName)
+async function downloadFileWithId(ahbx1904, fullPath, retryFlag) {
+  // if(fs.existsSync(fullPath)){
+  //   logger.info(`文件已存在: ${fullPath} - 跳过`);
   //   return;
   // }
-
-
-  try {
-    // 确保 responseType 是 'stream'
-    if (response.config.responseType !== 'stream') {
-      throw new Error('responseType 必须是 stream');
+  try{
+    const resp3 = await getFileDownloadUrl(ahbx1904)
+    let fileUrl = resp3.data.data;
+    const response = await downloadFile(fileUrl, fullPath);
+    // logger.info(`下载成功: ${fullPath}`);
+  }catch(err){
+    if(retryFlag==null){
+      retryFlag=1;
+    }else{
+      retryFlag++;
+    }
+    if(retryFlag>10){
+      logger.info(`下载重试10次仍失败: ${fullPath}，` + error);
+      throw new Error("下载重试10次仍失败，"+ error);
     }
 
-    // 使用 pipeline 管理流
-    await streamPipeline(response.data, fs.createWriteStream(fullPath));
-    
-    console.log(`Excel 文件已保存: ${fullPath}`);
-    return fullPath;
-    
-  } catch (error) {
-    throw new Error(`保存失败: ${error.message}`);
+    logger.info(`下载失败，重试(${retryFlag}): ${fullPath}`);
+    await downloadFileWithId(ahbx1904, fullPath, retryFlag)
   }
 }
-
 
 /**
  * 根据服务详情中的开始和结束列表下载相关图片
@@ -91,12 +82,16 @@ async function downloadFileByServiceInfo(serviceInfo, basePath){
   
   for(let s=0; s<startList.length; s++){
     let ahbx1904 = startList[s].ahbx1904;
-    await downloadFileWithId(ahbx1904, basePath + "/img_s_" + s + ".jpeg")
+    picDlQueue.add(async ()=>{
+      downloadFileWithId(ahbx1904, basePath + "/img_s_" + s + ".jpeg")
+    })
   }
 
   for(let e=0; e<endList.length; e++){
     let ahbx1904 = endList[e].ahbx1904;
-    await downloadFileWithId(ahbx1904, basePath + "/img_e_" + e + ".jpeg")
+    picDlQueue.add(async ()=>{
+      downloadFileWithId(ahbx1904, basePath + "/img_e_" + e + ".jpeg")
+    })
   }
 }
 
@@ -107,19 +102,43 @@ export async function jjServicePhotoExport( page=1, size=1, total=null, file=nul
   console.log("居家上门-服务历史照片导出")
   let serviceObjIdcardList = [];
 
+  const fsws = fs.createWriteStream('output.txt', {
+    encoding: 'utf8',
+    flags: 'w' // 'w' 写入, 'a' 追加
+  });
+  fsws.on('open', () => {
+    console.log('文件流已打开');
+  });
+  fsws.on('ready', () => {
+    console.log('文件流已准备就绪');
+  });
+  fsws.on('finish', () => {
+    console.log('所有数据已写入');
+  });
+  fsws.on('error', (err) => {
+    console.error('流写入错误:', err);
+  });
+
   // 1. 确定名单是从文件读取还是自己查询
   if(file==null){
+    // 1.1 将接口获取的数据保存到文件，后面通过文件处理
+
     // 1.1. 通过接口获取服务对象列表
     console.log("未指定文件，直接从接口查询名单")
 
-    let serviceObjListResp = await jujiaVisitServiceQuery(areaCode, null, size, page, year);
+    let serviceObjListResp = await jujiaVisitServiceQuery(areaCode, null, 30, size, page, year);
     let serviceObjList = serviceObjListResp.data.data.records;
     // logger.info("居家上门-综合查询-服务对象列表: ", serviceObjList)
     for(let i=0; i<serviceObjList.length; i++){
       const idCard = serviceObjList[i].ahbx1503;
       const ahbx1501 = serviceObjList[i].ahbx1501;
-      serviceObjIdcardList.push(idCard + ',' + ahbx1501);
+      const areaCodeName = serviceObjList[i].areaCodeName;
+      const record = idCard + ',' + ahbx1501 + ',' + areaCodeName;
+      // serviceObjIdcardList.push(record);
+      fsws.write(record + "\n")
     }
+    // 不处理，先生成文件，然后再处理
+    return;
   }else{
     // 1.2. 通过文件读取服务对象列表
     console.log("指定文件，直接从文件获取名单")
@@ -131,18 +150,13 @@ export async function jjServicePhotoExport( page=1, size=1, total=null, file=nul
       const line = serviceObjList[i];
       const arr = line.split(",");
       const idCard =arr[0].trim();
-      serviceObjIdcardList.push(idCard);
+      const ahbx1501 =arr[1].trim();
+      const areaCodeName =arr[2].trim();
+      serviceObjIdcardList.push(line);
     }
   }
-  logger.info("居家上门-综合查询-服务对象列表: ", serviceObjIdcardList)
+  logger.info("居家上门-综合查询-服务对象列表: ", serviceObjIdcardList.length)
 
-  // 2. 创建下载管理队列
-  const dlQueue = new PQueue({
-    // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
-    // interval: 1000,   // 时间窗口长度（毫秒）
-    concurrency: 1     // 并发数（可选，默认 Infinity）
-  });
-  
 
   // 2. 创建导出任务
   for(let i=0; i<serviceObjIdcardList.length; i++){
@@ -150,7 +164,16 @@ export async function jjServicePhotoExport( page=1, size=1, total=null, file=nul
     const arr = record.split(',');
     let idCard = arr[0];
     let ahbx1501 = arr[1];
-    logger.info('处理idCard->' +  idCard);
+    let areaCodeName =arr[2];
+    let status =arr[3];
+
+    if(status == "done"){
+      // fsws.write(record + "\n")
+      logger.info(`处理idCard->${idCard} - ${i} - skip`);
+      continue;
+    }
+    logger.info(`处理idCard->${idCard} - ${i} - processing`);
+
 
     queue.add(async () => {
       // 2.1 查询服务历史
@@ -167,22 +190,27 @@ export async function jjServicePhotoExport( page=1, size=1, total=null, file=nul
 
         dlQueue.add(async ()=>{
           // 2.2 查询服务详情
-          const resp2 = await jujiaServiceInfoDetails(jjsm0601)
+          const serviceInfoResp = await jujiaServiceInfoDetails(jjsm0601)
           // console.log(resp2.data);
 
           // 2.3 下载现场照片
-          let dlPath = `${idCard}/${jjsm0604.substring(0, 10)}_第${idx}次服务_${ahae0618Name}`;
+          let dlPath = `${areaCodeName}/${idCard}/${jjsm0604.substring(0, 10)}_第${idx}次服务_${ahae0618Name}`;
           // console.log(dlPath);
-          await downloadFileByServiceInfo(resp2.data.data, dlPath)
+          await downloadFileByServiceInfo(serviceInfoResp.data.data, dlPath)
+          logger.info(`第${i+1}个服务对象(${idCard})，第${idx}次服务-> 下载任务已创建`);
         })
       }
+      // fsws.write(record +",done\n")
     })
   }
 }
 
 
+/*******************************************************  居家上门-服务二维码导出  *****************************************************************/
+
+
 /**
- * 居家上门服务二维码导出
+ * 居家上门-服务二维码导出
  */
 export async function jjServiceQrCodeExport( page=1, size=1, total=null, file=null, output=".", year=2025, areaCode){
   console.log("居家上门-服务二维码导出")
@@ -193,7 +221,7 @@ export async function jjServiceQrCodeExport( page=1, size=1, total=null, file=nu
     // 1.1. 通过接口获取服务对象列表
     console.log("未指定文件，直接从接口查询名单")
 
-    let serviceObjListResp = await jujiaVisitServiceQuery(areaCode, null, size, page, year);
+    let serviceObjListResp = await jujiaVisitServiceQuery(areaCode, null, null, size, page, year);
     let serviceObjList = serviceObjListResp.data.data.records;
     // logger.info("居家上门-综合查询-服务对象列表: ", serviceObjList)
     for(let i=0; i<serviceObjList.length; i++){
@@ -255,13 +283,16 @@ export async function jjServiceQrCodeExport( page=1, size=1, total=null, file=nu
 }
 
 
+/*******************************************************  居家上门-服务历史导出  *****************************************************************/
+
+
 /**
- * 居家上门服务历史导出
+ * 居家上门-服务历史导出
  */
 export async function jjAutoJujiaServiceHistoryExport(page, size=1, total, file, output=".", year=2025, areaCode){
 
   // 1. 获取已确认费用列表 ， 1 是已确认
-  let feeListResp = await jujiaVisitServiceQuery(areaCode, null, size, page, year);
+  let feeListResp = await jujiaVisitServiceQuery(areaCode, null, null, size, page, year);
   let feeList = feeListResp.data.data.records;
   
   logger.info("居家上门-综合查询-服务列表: ", feeList.length)

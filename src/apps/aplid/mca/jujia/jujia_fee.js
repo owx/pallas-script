@@ -16,8 +16,8 @@ import { logger } from '#src/utils/LoggerUtils.js'
 
 // 创建任务队列
 const queue = new PQueue({ 
-  intervalCap: 1,   // 每个时间窗口内最多执行的任务数
-  interval: 2000,   // 时间窗口长度（毫秒）
+  // intervalCap: 1,   // 每个时间窗口内最多执行的任务数
+  // interval: 2000,   // 时间窗口长度（毫秒）
   concurrency: 1     // 并发数（可选，默认 Infinity）
 });
 
