@@ -30,14 +30,19 @@ export function handlerMessage (topic, message){
   const deviceSn = parseDeviceSn(hexString);
   // console.log("deviceSn", deviceSn)
 
-  // if(1){
+  if(1){
   // if(deviceSn =="13300000341000000461"){
-  if(deviceSn =="13300000341000000167"){
+  // if(deviceSn =="13300000341000000167"){
   // if(deviceSn =="19900000131000000436"){
+  // if(deviceSn =="19900000131000000369"){
 
-    logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
-    logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 
-    logger.debug(`人数：` + peopleNum)
+    // logger.debug("DType:", dType + "\tCom:", com + "\tLength:", length)
+    // logger.debug(hexString.substring(6, 22)  + " | " + deviceSn); 
+    // logger.debug(`人数：` + peopleNum)
+
+    console.log("DType:", dType + "\tCom:", com + "\tLength:", length)
+    console.log(hexString.substring(6, 22)  + " | " + deviceSn)
+    console.log(`人数：` + peopleNum)
 
     console.log(`MQTTX Message ${topic}: ${hexString}`)
     if(com==1){

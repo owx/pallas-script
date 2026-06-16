@@ -13,7 +13,7 @@ import { axiosManager } from '#utils/AxiosManager.js';
 // 街道申请，街道审批，县审批
 // 
 
-const authorization = 'Bearer 3f169c49-afdc-4ffe-8ea3-7c862e051e6e';
+const authorization = 'Bearer 5df0bde9-9b84-4251-9310-2d4431497846';
 
 const request = axiosManager.createInstance("mca", {
   baseURL: "https://ylfw.mca.gov.cn",
@@ -40,7 +40,6 @@ export async function queryUserInfo(appId='ylpt'){
 
   return request.get(url, {params: params});
 }
-
 
 /**
  * 

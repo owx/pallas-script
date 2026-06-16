@@ -27,10 +27,10 @@ class EncryptUtil {
             let lastChar = timestamp.charAt(timestamp.length - 1);
             let start = Number(lastChar);
             let key1 = token.substr(start, 16);
-            // console.log("key1", key1);
+            console.log("key1", key1);
 
             let firstLevelData = this.aesDecrypt(encryptData.encryption, key1);
-            // console.log("firstLevelData", firstLevelData);
+            console.log("firstLevelData", firstLevelData);
 
             // 二层解密
             lastChar = firstLevelData.charAt(firstLevelData.length - 1);

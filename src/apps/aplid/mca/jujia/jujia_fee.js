@@ -12,7 +12,6 @@ import {
 } from "../core/mca_core.js";
 import { logger } from '#src/utils/LoggerUtils.js'
 
-// const logger = new Logger({ layout: {type: 'pattern', pattern: '%m'} });
 
 // 创建任务队列
 const queue = new PQueue({ 
@@ -46,12 +45,12 @@ const queue = new PQueue({
 //   }
 // }
 
-export async function jjAutoJujiaFeeConfirm(current=1, size=1, total=1){
+export async function jjAutoJujiaFeeConfirm(page=1, size=1, total=1){
   
   // 1. 获取已确认费用列表 ， 1 是已确认
   let confirmList=[];
   let totalPage=Math.ceil(total/size);
-  for(let i=current; i<=totalPage; i++){
+  for(let i=page; i<=totalPage; i++){
     let confirmListResp = await jujiaFeeConfirmList(0, size, i);
     let list = confirmListResp.data.data?.records;
     
@@ -75,10 +74,10 @@ export async function jjAutoJujiaFeeConfirm(current=1, size=1, total=1){
 async function jjAutoConfirm(confirmList=[]){
 
   // 1. 已确认费用列表
-  logger.info("已确认列表: ", confirmList)
+  logger.info("已确认列表: ", confirmList.length)
 
-  const targetDate = new Date('2026-04-01');
-
+  const targetDate = new Date('2026-06-01');
+  
   for(let i=0; i<confirmList.length; i++){
     let ahbx1502 = confirmList[i].ahbx1502;           // 服务对象姓名
 

@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 // import  { logger } from '#utils/logger.js';
 import { qrcodeApp } from './qrcode/index.js';
+import { encApp } from './encrypt/index.js';
 import { convertSvgToPng } from './svg2png/index.js';
 
 export async function utilsMain(mode, size, input, output){
 
     switch(mode){
+        case 'encrypt':
+            case 'enc':
+                console.log("start encrypt app...")
+                encApp();
+                break;
+
         case 'qrcode':
         case 'qr':
             console.log("start qrcode app...")

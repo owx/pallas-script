@@ -298,7 +298,7 @@ export async function jjAutoJujiaServiceHistoryExport(page, size=1, total, file,
   logger.info("居家上门-综合查询-服务列表: ", feeList.length)
 
   
-  // 2. 自动审核
+  // 2. 自动导出
   for(let i=0; i<feeList.length; i++){
     let ahbx1501 = feeList[i].ahbx1501;
     let ahbx1502 = feeList[i].ahbx1502;

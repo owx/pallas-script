@@ -49,7 +49,7 @@ program
   });
 
 program
-  .command('utils')
+  .command('ut')
   .description('实用工具集utils')
   .option('-m, --mode <string>', '工作模式', 'default')
   .option('-s, --size <number>', '批量处理数量', '1')

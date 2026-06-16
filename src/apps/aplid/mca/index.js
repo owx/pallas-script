@@ -65,7 +65,7 @@ export async function mcaMain(mode, page, size, total, file, output) {
 
         case 'ServiceHistoryExport':
             // 居家服务历史导出
-            jjAutoJujiaServiceHistoryExport(page, size, total, file, output, 2025);
+            jjAutoJujiaServiceHistoryExport(page, size, total, file, output, 2024, 340306000000);
             break;
 
         case 'ServiceQrCodeExport':
@@ -86,7 +86,7 @@ export async function mcaMain(mode, page, size, total, file, output) {
         case 'FeeConfirm':
             // 居家-服务费用确认
             let current=1;
-            jjAutoJujiaFeeConfirm(current, size, total);
+            jjAutoJujiaFeeConfirm(page, size, total);
             // jjFeeAutoConfirmAll(4000);
             break;
 

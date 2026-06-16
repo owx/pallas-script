@@ -4,6 +4,49 @@ import axios from 'axios';
 import AdmZip from 'adm-zip';
 import path from 'path';
 import { pipeline } from 'stream/promises';
+import Excel from 'exceljs';
+
+
+/**
+ * 读取excel文件并转换为json对象
+ * 
+ * @param {*} filePath 
+ * @returns 
+ */
+export async function excelToJson(filePath) {
+  const workbook = new Excel.Workbook();
+  await workbook.xlsx.readFile(filePath);
+  
+  const worksheet = workbook.worksheets[0];
+  const result = [];
+  
+  // 获取表头（第一行）
+  const headers = [];
+  const headerRow = worksheet.getRow(1);
+  headerRow.eachCell((cell, colNumber) => {
+      headers[colNumber] = cell.value;
+  });
+  
+  // 从第二行开始读取数据
+  for (let i = 2; i <= worksheet.rowCount; i++) {
+      const row = worksheet.getRow(i);
+      const rowData = {};
+      
+      row.eachCell((cell, colNumber) => {
+          const headerName = headers[colNumber];
+          if (headerName) {
+              rowData[headerName] = cell.value;
+          }
+      });
+      
+      // 跳过空行
+      if (Object.keys(rowData).length > 0) {
+          result.push(rowData);
+      }
+  }
+  
+  return result;
+}
 
 
 /**
@@ -25,7 +68,7 @@ export function writeFileWithBOM(path, content){
  * @returns 
  */
 export async function fileExists(filePath) {
-  return fs.existsSync(fullPath);
+  return fs.existsSync(filePath);
   // try {
   //   await access(filePath, constants.F_OK);
   //   return true;

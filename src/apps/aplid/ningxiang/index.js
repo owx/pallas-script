@@ -5,6 +5,7 @@ import { batchQueryDeathData, batchQueryDeath, processData} from './gongan/death
 // import  ServiceOrderCheck from './jinmin.js';
 import { processHujiData } from "./gongan/huji.js";
 import { batchQueryGeo, batchQueryOrgGeo, preProcessData } from './geo/geocoder.js';
+import { xfqMain } from './utils/xfq.js';
 import { test } from './gongan/index.js';
 
 export async function nxMain(mode, size, file="./oldman.txt") {
@@ -44,6 +45,11 @@ export async function nxMain(mode, size, file="./oldman.txt") {
             // batchQueryOrgGeo("org.txt", 0, 100)
             break;
 
+        case "xfq":
+            // 适老化消费券资料下载
+            xfqMain()
+            break;
+
         case "test":
             preProcessData();
             break;
@@ -56,6 +62,7 @@ export async function nxMain(mode, size, file="./oldman.txt") {
             console.log("\t-m jinmin \t金民工单数据分析")
             console.log("\t-m huji \t户籍数据处理")
             console.log("\t-m geo \t\t地址转经纬度")
+            console.log("\t-m xfq \t\t适老化消费券资料下载")
             break;
     }
 }
