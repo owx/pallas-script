@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ppc"
+version = "0.0.1"
+description = "Pallas Python CLI 工具"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Cary Chen", email = "logcr@163.com"}
+]
+keywords = ["pallas", "cli", "tool"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+
+# 依赖项
+dependencies = [
+    # "requests>=2.25.0",  # 示例：如果有外部依赖
+]
+
+# 可选依赖（额外功能）
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "mypy>=0.990",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+# 🔑 关键：命令行入口点
+[project.scripts]
+ppc = "apps.ppc.cli:main"
+mycli-hello = "apps.ppc.cli:hello_cmd"
+mycli-stats = "apps.ppc.cli:stats_cmd"
+
+# 如果需要定义插件入口点
+[project.entry-points."apps.ppc.plugins"]
+default = "apps.ppc.plugins:DefaultPlugin"
+
+# 工具配置（可选）
+[tool.setuptools]
+# 自动发现包
+packages = {find = {}}
+
+[tool.setuptools.package-data]
+mycli = ["*.txt", "*.yaml", "*.json"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --cov=mycli"
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203", "W503"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
