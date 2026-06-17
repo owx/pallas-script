@@ -33,8 +33,8 @@ class AplidEncrypt:
     """加密工具类，对应 TypeScript 版本的 EncryptUtil"""
     
     def __init__(self):
-        self.default_key1 = '11111111111111'
-        self.default_key2 = '22222222222222'
+        self.default_key1 = 'j#vcZgVXusQ6MQQS'
+        self.default_key2 = '@/&2,3^_O!ar9r_:'
     
     def aes_decrypt(self, data: str, keystr: str) -> str:
         """
