@@ -2,7 +2,7 @@
 import { processImplementImages } from './homebed/hb_implement.js';
 import { processEnvAssessImages } from './homebed/hb_env_assess.js';
 
-export async function cpMain(mode, limit, output) {
+export async function nxproMain(mode, limit, output) {
     
     switch(mode){
 

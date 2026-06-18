@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { bcMain } from './blockchain/index.js';
-import { cpMain } from './city-platform/index.js';
-import { cfMain } from './chifeng/index.js';
+import { nxproMain } from './nxpro/index.js';
+import { govMain } from './gov51/index.js';
 import { mcaMain } from './mca/index.js';
 import { nxMain } from './ningxiang/index.js';
+import { ownMain } from './own/index.js';
 
 const program = new Command();
 
@@ -21,6 +22,18 @@ program
   // .option('--minify', '是否压缩')
   .action((options) => {
     bcMain(options.size);
+  });
+
+program
+  .command('gov')
+  .description('5.1智慧养老平台系列工具')
+  .option('-m, --mode <string>', '工作模式', 'default')
+  .option('-s, --size <number>', '批量处理数量', '1')
+  .option('-o, --output <dir>', '输出目录', 'dist')
+  .option('--minify', '是否压缩')
+  .action((options) => {
+    console.log(`运行5.1平台工具(参数: mode=${options.mode}, size=${options.size})`);
+    govMain(options.mode, options.size);
   });
 
 program
@@ -52,8 +65,8 @@ program
   });
 
 program
-  .command('cp')
-  .description('市平台6.0&赤峰平台工具集')
+  .command('nxpro')
+  .description('6.0市平台&赤峰家床工具集')
   .option('-m, --mode <string>', '工作模式', 'default')
   .option('-l, --limit <number>', '批量处理数量', '1')
   .option('-n, --name <string>', '关键字名称')
@@ -61,33 +74,22 @@ program
   .option('--minify', '是否压缩')
   .action((options) => {
     console.log(`运行CP工具(参数: mode=${options.mode}, limit=${options.limit})`);
-    cpMain(options.mode, options.limit, options.output);
+    nxproMain(options.mode, options.limit, options.output);
   });
 
 program
-  .command('cf')
-  .description('赤峰市养老平台批量数据处理工具集')
+  .command('own')
+  .description('自营平台系列工具集')
   .option('-m, --mode <string>', '工作模式', 'default')
-  .option('-s, --size <number>', '批量处理数量', '1')
-  .option('-o, --output <dir>', '输出目录', 'dist')
+  .option('-p, --page <number>', '当前页码', '1')
+  .option('-s, --size <number>', '分页大小', '1')
+  .option('-t, --total <number>', '数据总量', '1')
+  .option('-f, --file <string>', '需要输入的文件')
+  .option('-o, --output <dir>', '输出目录', '.')
   .option('--minify', '是否压缩')
   .action((options) => {
-    console.log(`运行CF工具(参数: mode=${options.mode}, size=${options.size})`);
-    cfMain(options.mode, options.size);
-  });
-
-program
-  .command('ms')
-  .description('5.1平台菜单同步工具')
-  .option('-m, --mode <string>', '工作模式', 'default')
-  .option('-o, --output <dir>', '输出目录', 'dist')
-  .option('--minify', '是否压缩')
-  .action((options) => {
-    console.log(`构建到目录: ${options.output}`);
-    if (options.minify) {
-      console.log('启用压缩');
-    }
-    // 执行构建逻辑
+    console.log(`运行MCA工具(参数: mode=${options.mode}, page=${options.page}, size=${options.size}, total=${options.total}, file=${options.file}, output=${options.output})`);
+    ownMain(options.mode, options.page, options.size, options.total, options.file, options.output);
   });
 
 program.parse();
